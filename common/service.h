@@ -1,0 +1,22 @@
+#ifndef __INC_SERVICE_H__
+#define __INC_SERVICE_H__
+
+// #define _IMPROVED_PACKET_ENCRYPTION_ // 패킷 암호화 개선
+//#define __AUCTION__
+#define __PET_SYSTEM__
+#define __UDP_BLOCK__
+#define ENABLE_NEW_AFFECT_POTION
+#define __VIEW_TARGET_PLAYER_HP__
+#define __VIEW_TARGET_DECIMAL_HP__
+#define __SEND_TARGET_INFO__
+#define __WJ_SHOW_MOB_INFO__
+#define ENABLE_IPERI_AUTO_RELOAD_ADMIN_DATA
+#define ENABLE_IGNORE_LOWER_BUFFS
+//#define ENABLE_QUEST_DIE_EVENT
+#define M2BOB_PROTECTION
+#define ENABLE_LANGUAGE_SYSTEM
+#define LANGUAGE_MAX_NUM 2
+#endif
+#define HWID_ENABLED
+#define ELEMENT_TARGET
+#define RENEWAL_DEAD_PACKET
