@@ -2,3 +2,4 @@
 game/src/cc1plus.core
 !game/*
 !db/*
+!common/*
