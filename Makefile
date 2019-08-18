@@ -1,5 +1,5 @@
 CC=gcc
-CXX=g++49
+CXX=g++50
 
 PLATFORM = $(shell file /bin/ls | cut -d' ' -f3 | cut -d'-' -f1)
 BSD_VERSION = $(shell uname -v 2>&1 | cut -d' ' -f2 | cut -d'.' -f1)
