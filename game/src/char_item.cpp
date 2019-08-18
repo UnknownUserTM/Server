@@ -3,7 +3,6 @@
 #include <stack>
 
 #include "utils.h"
-#include "test.h"
 #include "config.h"
 #include "char.h"
 #include "char_manager.h"
