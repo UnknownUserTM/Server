@@ -19,7 +19,4 @@
 #endif
 #define HWID_ENABLED
 #define ELEMENT_TARGET
-<<<<<<< HEAD
 #define RENEWAL_DEAD_PACKET
-=======
->>>>>>> cfec7f1f2c2ca9562fd00fcaabcc4b1380257353
