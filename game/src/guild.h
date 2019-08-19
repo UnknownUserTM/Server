@@ -398,6 +398,7 @@ class CGuild
 
 		typedef std::map< DWORD, LPEVENT >	EventMap;
 		EventMap	m_GuildInviteEventMap;	///< 길드 초청 Event map. key: 초대받은 캐릭터의 PID
+		int			m_guildPostCommentPulse; ///Guildcomment Flood FIX
 		// END_OF_GUILD_JOIN_BUG_FIX
 #ifdef ENABLE_D_NJGUILD
 	private:
