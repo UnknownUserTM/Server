@@ -1223,25 +1223,8 @@ void CItem::AlterToMagicItem()
 			iThirdPct = 5;
 			break;
 
-		// case ITEM_ARMOR:
-		// case ITEM_COSTUME:
-			// if (GetSubType() == ARMOR_BODY)
-			// {
-				// iSecondPct = 10;
-				// iThirdPct = 2;
-			// }
-			// else
-			// {
-				// iSecondPct = 10;
-				// iThirdPct = 1;
-			// }
-			// break;
-		case ITEM_COSTUME:
-			iSecondPct = 50;
-			iThirdPct = 40;
-			break;
-
 		case ITEM_ARMOR:
+		case ITEM_COSTUME:
 			if (GetSubType() == ARMOR_BODY)
 			{
 				iSecondPct = 10;
@@ -1253,6 +1236,7 @@ void CItem::AlterToMagicItem()
 				iThirdPct = 1;
 			}
 			break;
+
 		default:
 			return;
 	}

@@ -5083,73 +5083,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							}
 						}
 						break;
-					// COSTUMEATTR
-					case USE_COSTUME_CHANGE_ATTRIBUTE:
-					case USE_COSTUME_ADD_ATTRIBUTE:
-						{
-							LPITEM item2;
-							if (!IsValidItemPosition(DestCell) || !(item2 = GetItem(DestCell)))
-								return false;
 
-							if (item2->IsExchanging())
-								return false;
-
-							if (item2->IsEquipped())
-								return false;
-
-							if (ITEM_WEAPON == item2->GetType() || ITEM_ARMOR  == item2->GetType() ||
-									 COSTUME_HAIR == item2->GetSubType())// || COSTUME_ACCE == item2->GetSubType())
-							{
-								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can use these bonuses only costumes."));
-								return false;
-							}
-
-							switch (item->GetSubType())
-							{
-								case USE_COSTUME_ADD_ATTRIBUTE:
-									if (item2->GetAttributeSetIndex() == -1)
-									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("??? ??? ? ?? ??????."));
-										return false;
-									}
-
-									if (item2->GetAttributeCount() < 1)
-									{
-										char buf[21];
-										snprintf(buf, sizeof(buf), "%u", item2->GetID());
-
-										item2->AddAttribute();
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You have successfully added bonus."));
-										item->SetCount(item->GetCount() - 1);
-									}
-									else
-									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You can add just a bonus outfit."));
-										break;
-									}
-									break;
-
-								case USE_COSTUME_CHANGE_ATTRIBUTE:
-									if (item2->GetAttributeSetIndex() == -1)
-									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("??? ??? ? ?? ??????."));
-									return false;
-									}
-
-									if (item2->GetAttributeCount() == 0)
-									{
-										ChatPacket(CHAT_TYPE_INFO, LC_TEXT("This suit does not own any bonus."));
-										return false;
-									}
-
-									item2->ClearAttribute();
-									item2->AlterToMagicItem();
-									item->SetCount(item->GetCount() - 1);
-									ChatPacket(CHAT_TYPE_INFO, LC_TEXT("You just changed the bonus."));
-									break;
-							}
-						}
-						break;
 					case USE_TUNING:
 					case USE_DETACHMENT:
 						{
