@@ -794,7 +794,7 @@ void CHARACTER::Reward(bool bItemDrop)
 	}
 	//pu1.Pop();
 	
-	pkAttacker->DropLockedTreasure();
+	// pkAttacker->DropLockedTreasure();
 	
 	
 	if (!bItemDrop)
@@ -1300,19 +1300,19 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	}
 	//END_CHECK_FORKEDROAD_WAR
 
-	if (pkKiller &&
-			!isAgreedPVP &&
-			!isUnderGuildWar &&
-			IsPC() &&
-			!isDuel &&
-			!isForked &&
-			!IS_CASTLE_MAP(GetMapIndex()))
-	{
-		if (GetGMLevel() == GM_PLAYER || test_server)
-		{
-			ItemDropPenalty(pkKiller);
-		}
-	}
+	// if (pkKiller &&
+			// !isAgreedPVP &&
+			// !isUnderGuildWar &&
+			// IsPC() &&
+			// !isDuel &&
+			// !isForked &&
+			// !IS_CASTLE_MAP(GetMapIndex()))
+	// {
+		// if (GetGMLevel() == GM_PLAYER || test_server)
+		// {
+			// ItemDropPenalty(pkKiller);
+		// }
+	// }
 
 	// CASTLE_SIEGE
 	if (IS_CASTLE_MAP(GetMapIndex()))
@@ -1383,26 +1383,26 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 
 					if (number(1, 100) < iNoPenaltyProb)
 						pkKiller->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(pkKiller->GetLanguage(), "용신의 보호로 아이템이 떨어지지 않았습니다."));
-					else
-					{
-						if (pkKiller->GetParty())
-						{
-							FPartyAlignmentCompute f(-20000, pkKiller->GetX(), pkKiller->GetY());
-							pkKiller->GetParty()->ForEachOnlineMember(f);
+					// else
+					// {
+						// if (pkKiller->GetParty())
+						// {
+							// FPartyAlignmentCompute f(-20000, pkKiller->GetX(), pkKiller->GetY());
+							// pkKiller->GetParty()->ForEachOnlineMember(f);
 
-							if (f.m_iCount == 0)
-								pkKiller->UpdateAlignment(-20000);
-							else
-							{
-								sys_log(0, "ALIGNMENT PARTY count %d amount %d", f.m_iCount, f.m_iAmount);
+							// if (f.m_iCount == 0)
+								// pkKiller->UpdateAlignment(-20000);
+							// else
+							// {
+								// sys_log(0, "ALIGNMENT PARTY count %d amount %d", f.m_iCount, f.m_iAmount);
 
-								f.m_iStep = 1;
-								pkKiller->GetParty()->ForEachOnlineMember(f);
-							}
-						}
-						else
-							pkKiller->UpdateAlignment(-20000);
-					}
+								// f.m_iStep = 1;
+								// pkKiller->GetParty()->ForEachOnlineMember(f);
+							// }
+						// }
+						// else
+							// pkKiller->UpdateAlignment(-20000);
+					// }
 				}
 
 				char buf[256];
