@@ -6886,14 +6886,13 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 	}
 
 	// 화살 이외에는 마지막 공격 시간 또는 스킬 사용 1.5 후에 장비 교체가 가능
-	DWORD dwCurTime = get_dword_time();
-
-	if (iWearCell != WEAR_ARROW
-		&& (dwCurTime - GetLastAttackTime() <= 200 || dwCurTime - m_dwLastSkillTime <= 200))
-	{
-		ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "가만히 있을 때만 착용할 수 있습니다."));
-		return false;
-	}
+    DWORD dwCurTime = get_dword_time();
+    //if (iWearCell != WEAR_ARROW && (dwCurTime - GetLastAttackTime() <= 1500 || dwCurTime - m_dwLastSkillTime <= 1500))
+    if (iWearCell != WEAR_ARROW && (dwCurTime - m_dwLastSkillTime <= 200))
+    {
+        ChatPacket(CHAT_TYPE_INFO, LC_TEXT("가만히 있을 때만 착용할 수 있습니다."));
+        return false;
+    }
 
 	// 용혼석 특수 처리
 	if (item->IsDragonSoul())
