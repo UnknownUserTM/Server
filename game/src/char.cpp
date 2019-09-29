@@ -3656,6 +3656,8 @@ void CHARACTER::PointChange(BYTE type, int64_t amount, bool bAmount, bool bBroad
 			// DEPEND_BONUS_ATTRIBUTES
 		case POINT_SKILL_DEFEND_BONUS:
 		case POINT_NORMAL_HIT_DEFEND_BONUS:
+		case POINT_ATTBONUS_STONE:
+		case POINT_ATTBONUS_BOSS:
 			SetPoint(type, GetPoint(type) + amount);
 			val = GetPoint(type);
 			break;
@@ -4035,6 +4037,8 @@ void CHARACTER::ApplyPoint(BYTE bApplyType, int iVal)
 #ifdef ENABLE_MAGIC_REDUCTION_SYSTEM
 		case APPLY_RESIST_MAGIC_REDUCTION:	//98
 #endif
+		case APPLY_ATTBONUS_STONE:
+		case APPLY_ATTBONUS_BOSS:
 			PointChange(aApplyInfo[bApplyType].bPointType, iVal);
 			break;
 
