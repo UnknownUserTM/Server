@@ -4918,3 +4918,42 @@ ACMD (do_ds_list)
 			ch->ChatPacket(CHAT_TYPE_INFO, "cell : %d, name : %s, id : %d", item->GetCell(), item->GetName(), item->GetID());
 	}
 }
+
+ACMD(do_change_race)
+{
+	char arg1[256];
+	char arg2[256];
+
+	two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
+
+	if (!(*arg1) || !(*arg2))
+		return;
+	
+	int race;
+	int skillgroup;
+	str_to_number(race, arg1);
+	str_to_number(skillgroup, arg2);
+	if (race > 7 || race < 0)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "The Number must be from 0 --> 7 only");
+		return;
+	}
+	
+	LPITEM item;
+	for (int i = 0; i < 6; i++)
+	{
+		item = ch->GetWear(i);
+		if (item != NULL)
+			ch->UnequipItem(item);
+	}
+	item = ch->GetWear(WEAR_SHIELD);
+	if (item != NULL)
+		ch->UnequipItem(item);
+	
+	ch->SetRace(race);
+	// ch->ChatPacket(CHAT_TYPE_INFO, "Race= %d", ch->GetRaceNum());
+	ch->ClearSkill();
+	ch->SetSkillGroup(skillgroup);
+	ch->ClearSubSkill();
+	ch->WarpSet(ch->GetX(), ch->GetY(), ch->GetMapIndex());
+}

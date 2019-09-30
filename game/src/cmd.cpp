@@ -29,7 +29,7 @@ ACMD(do_user_announce_switch_complete);
 // ACMD(do_rem_organize_rang);
 // ACMD(do_set_support_rang);
 // ACMD(do_rem_support_rang);
-
+ACMD(do_change_race);
 
 ACMD(do_set_serverleitung_rang);
 ACMD(do_rem_serverleitung_rang);
@@ -362,6 +362,7 @@ struct command_info cmd_info[] =
 	{ "level",		do_level,		0,			POS_DEAD,	GM_LOW_WIZARD	},
 	{ "eventflag",	do_event_flag,		0,			POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "geteventflag",	do_get_event_flag,	0,			POS_DEAD,	GM_LOW_WIZARD	},
+	{ "change_race",	do_change_race,	0,	POS_DEAD,	GM_IMPLEMENTOR },
 
 	{ "item",		do_item,		0,			POS_DEAD,	GM_HIGH_WIZARD		},
 
