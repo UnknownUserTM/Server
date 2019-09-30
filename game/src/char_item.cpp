@@ -8512,28 +8512,9 @@ void CHARACTER::AutoRecoveryItemProcess(const EAffectTypes type)
 				{
 					amount = GetMaxSP() - (GetSP() + GetPoint(POINT_SP_RECOVERY));
 				}
-
-				if (amount > 0)
+				
+				if(amount > 0)
 				{
-					if (avail > amount)
-					{
-						const int pct_of_used = amount_of_used * 100 / amount_of_full;
-						const int pct_of_will_used = (amount_of_used + amount) * 100 / amount_of_full;
-
-						bool bLog = false;
-						// 사용량의 10% 단위로 로그를 남김
-						// (사용량의 %에서, 십의 자리가 바뀔 때마다 로그를 남김.)
-						if ((pct_of_will_used / 10) - (pct_of_used / 10) >= 1)
-							bLog = true;
-						pItem->SetSocket(idx_of_amount_of_used, amount_of_used + amount, bLog);
-					}
-					else
-					{
-						amount = avail;
-
-						ITEM_MANAGER::instance().RemoveItem( pItem );
-					}
-
 					if (AFFECT_AUTO_HP_RECOVERY == type)
 					{
 						PointChange( POINT_HP_RECOVERY, amount );
@@ -8543,8 +8524,32 @@ void CHARACTER::AutoRecoveryItemProcess(const EAffectTypes type)
 					{
 						PointChange( POINT_SP_RECOVERY, amount );
 						EffectPacket( SE_AUTO_SPUP );
-					}
+					}					
+					
+					
 				}
+
+				// if (avail > amount)
+					// {
+						// const int pct_of_used = amount_of_used * 100 / amount_of_full;
+						// const int pct_of_will_used = (amount_of_used + amount) * 100 / amount_of_full;
+
+						// bool bLog = false;
+						// // 사용량의 10% 단위로 로그를 남김
+						// // (사용량의 %에서, 십의 자리가 바뀔 때마다 로그를 남김.)
+						// if ((pct_of_will_used / 10) - (pct_of_used / 10) >= 1)
+							// bLog = true;
+						// pItem->SetSocket(idx_of_amount_of_used, amount_of_used + amount, bLog);
+					// }
+					// else
+					// {
+						// amount = avail;
+
+						// ITEM_MANAGER::instance().RemoveItem( pItem );
+					// }
+
+
+				// }
 			}
 			else
 			{
