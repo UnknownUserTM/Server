@@ -946,7 +946,12 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 
 	if (IsRefineThroughGuild() || bMoneyOnly)
 		prob -= 10;
-
+	
+	int success_prob;
+	if(GetQuestFlag("fortune_fountain.blacksmith_blessing") > 0)
+	{
+		prob = 1;
+	}
 	// END_OF_REFINE_COST
 
 	if (prob <= prt->prob)
@@ -993,6 +998,18 @@ bool CHARACTER::DoRefine(LPITEM item, bool bMoneyOnly)
 			sys_log(0, "PayPee %d", cost);
 			PayRefineFee(cost);
 			sys_log(0, "PayPee End %d", cost);
+			
+			if(GetQuestFlag("fortune_fountain.blacksmith_blessing") > 0)
+			{
+				int blessing_count = GetQuestFlag("fortune_fountain.blacksmith_blessing")-1;
+				SetQuestFlag("fortune_fountain.blacksmith_blessing",blessing_count);
+				if(blessing_count > 0) {
+					ChatPacket(CHAT_TYPE_INFO, "Der Segen des Schmiedes wurde verbraucht! Verbl. Segen: %d", blessing_count);
+					
+				} else {
+					ChatPacket(CHAT_TYPE_INFO, "Der Segen des Schmiedes wurde verbraucht!");
+				}
+			}
 		}
 		else
 		{
@@ -1257,6 +1274,12 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 		success_prob = 80;
 		szRefineType = "BDRAGON_SCROLL";
 	}
+	
+	if(GetQuestFlag("fortune_fountain.blacksmith_blessing") > 0)
+	{
+		success_prob = 100;
+		
+	}
 
 	pkItemScroll->SetCount(pkItemScroll->GetCount() - 1);
 
@@ -1301,6 +1324,18 @@ bool CHARACTER::DoRefineWithScroll(LPITEM item)
 			pkNewItem->AttrLog();
 			//PointChange(POINT_GOLD, -prt->cost);
 			PayRefineFee(prt->cost);
+
+			if(GetQuestFlag("fortune_fountain.blacksmith_blessing") > 0)
+			{
+				int blessing_count = GetQuestFlag("fortune_fountain.blacksmith_blessing")-1;
+				SetQuestFlag("fortune_fountain.blacksmith_blessing",blessing_count);
+				if(blessing_count > 0) {
+					ChatPacket(CHAT_TYPE_INFO, "Der Segen des Schmiedes wurde verbraucht! Verbl. Segen: %d", blessing_count);
+					
+				} else {
+					ChatPacket(CHAT_TYPE_INFO, "Der Segen des Schmiedes wurde verbraucht!");
+				}
+			}
 		}
 		else
 		{
@@ -1437,7 +1472,14 @@ bool CHARACTER::RefineInformation(BYTE bCell, BYTE bType, int iAdditionalCell)
 		p.cost = ComputeRefineFee(prt->cost);
 
 	//END_MAIN_QUEST_LV7
-	p.prob = prt->prob;
+	if(GetQuestFlag("fortune_fountain.blacksmith_blessing") > 0)
+	{
+		p.prob = 100;
+		
+	} else {
+		p.prob = prt->prob;
+	}
+	
 	if (bType == REFINE_TYPE_MONEY_ONLY)
 	{
 		p.material_count = 0;
@@ -7712,8 +7754,8 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, DWORD bCount, int iRarePct, boo
 
 				if (bCount == 0)
 				{
-					if (bMsg)
-						PacketNotifyPickup(LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "COLLECT_ITEM_FROM_GROUND_OWNER"), item->GetVnum());
+					// if (bMsg)
+						// PacketNotifyPickup(LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "COLLECT_ITEM_FROM_GROUND_OWNER"), item->GetVnum());
 
 					return item;
 				}
