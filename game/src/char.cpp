@@ -8037,8 +8037,8 @@ bool CHARACTER::IsInOXMap()
 
 bool CHARACTER::IsInFarmMap()
 {
-	int mapCount = 18;
-	int mapList[] = {363,364,365,366,367,368,369,381,382,370,383,384,371,385,386,387,388,389};
+	int mapCount = 17;
+	int mapList[] = {41,1,21,43,3,23,67,68,65,64,61,62,63,301,302,303,304};
 
 	for (int i = 0; i < mapCount; ++i)
 	{
