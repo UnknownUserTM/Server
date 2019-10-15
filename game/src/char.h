@@ -717,6 +717,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		DWORD			GetExp() const		{ return m_points.exp;	}
 		void			SetExp(DWORD exp)	{ m_points.exp = exp;	}
 		bool			block_exp;
+		DWORD			guildStone;
 		
 		DWORD			mount_seal_index;
 		bool			horse_is_mount;
@@ -730,6 +731,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			battlezone_RemoveMark();
 		void			battlezone_BreakExit();
 		bool			IsInBattlezone();
+		void			DestroyGuildLand(DWORD dwGuildID);
 		
 		// QuestSystem //
 		// QuestIntro ---------------------------------------------------------------------------- //

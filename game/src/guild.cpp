@@ -1009,30 +1009,22 @@ void CGuild::RequestDisband(DWORD pid)
 	// END_LAND_CLEAR
 }
 
+void CGuild::RequestLandDestruction()
+{
+	building::CManager::instance().ClearLandByGuildID(GetID());
+}
+
 void CGuild::AddComment(LPCHARACTER ch, const std::string& str)
 {
-	if (str.length() > GUILD_COMMENT_MAX_LEN || str.length() == 0) // Added string null verification
+	if (str.length() > GUILD_COMMENT_MAX_LEN)
 		return;
-    
-	// Compare last pulse with current pulse and notify the player
-	if (m_guildPostCommentPulse > thecore_pulse()) {
-		int deltaInSeconds = ((m_guildPostCommentPulse / PASSES_PER_SEC(1)) - (thecore_pulse() / PASSES_PER_SEC(1)));
-		int minutes = deltaInSeconds / 60;
-		int seconds = (deltaInSeconds - (minutes * 60));
- 
-		ch->ChatPacket(CHAT_TYPE_INFO, "Du kannst diese Aktion erst in: %02d minuten und %02d sekunden ausfuehren!", minutes, seconds);
-		return;
-	}
- 
+
 	char text[GUILD_COMMENT_MAX_LEN * 2 + 1];
 	DBManager::instance().EscapeString(text, sizeof(text), str.c_str(), str.length());
- 
+
 	DBManager::instance().FuncAfterQuery(void_bind(std::bind1st(std::mem_fun(&CGuild::RefreshCommentForce),this),ch->GetPlayerID()),
 			"INSERT INTO guild_comment%s(guild_id, name, notice, content, time) VALUES(%u, '%s', %d, '%s', NOW())",
 			get_table_postfix(), m_data.guild_id, ch->GetName(), (str[0] == '!') ? 1 : 0, text);
-        
-	// Set comment pulse to 10 minutes
-	m_guildPostCommentPulse = thecore_pulse() + PASSES_PER_SEC(10*60);
 }
 
 void CGuild::DeleteComment(LPCHARACTER ch, DWORD comment_id)
@@ -1698,6 +1690,15 @@ void CGuild::Chat(const char* c_pszText)
 	P2P_MANAGER::instance().Send(&p2, sizeof(TPacketGGGuildChat));
 }
 
+// void CGuild::ChatInfo(int guild, const char* c_pszText)
+// {
+	// CGuild* pGuild = CGuildManager::instance().FindGuild( guild );
+	// if ( !pGuild )
+		// return;
+	
+	// pGuild->Chat(c_pszText);
+	
+// }
 LPCHARACTER CGuild::GetMasterCharacter()
 {
 	return CHARACTER_MANAGER::instance().FindByPID(GetMasterPID());

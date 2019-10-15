@@ -21,6 +21,7 @@ enum EMisc
 	ACCOUNT_STATUS_MAX_LEN	= 8,
 	CHARACTER_NAME_MAX_LEN	= 24,
 	SHOP_SIGN_MAX_LEN		= 32,
+	// SPECIAL_INVENTORY_PAGES = 4 * 90,
 	INVENTORY_MAX_NUM		= 180,
 	ABILITY_MAX_NUM			= 50,
 	EMPIRE_MAX_NUM			= 4,
@@ -846,3 +847,5 @@ typedef enum
 #pragma pack(pop)
 
 #endif
+
+

@@ -272,12 +272,15 @@ void CObject::RegenNPC()
 	int x = m_pProto->lNPCX;
 	int y = m_pProto->lNPCY;
 	int newX, newY;
-
+	if(m_pProto->dwNPCVnum == 13000)
+		newY = newY - 300;
 	float rot = m_data.zRot * 2.0f * M_PI / 360.0f;
 
 	newX = (int)(( x * cosf(rot)) + ( y * sinf(rot)));
 	newY = (int)(( y * cosf(rot)) - ( x * sinf(rot)));
+	
 
+	
 	m_chNPC = CHARACTER_MANAGER::instance().SpawnMob(m_pProto->dwNPCVnum,
 			GetMapIndex(),
 			GetX() + newX,
@@ -891,20 +894,35 @@ void CManager::FinalizeBoot()
 		// LAND_MASTER_LOG
 		sys_log(0, "LandMaster map_index=%d pos=(%d, %d)", r.lMapIndex, r.x, r.y);
 		// END_OF_LAND_MASTER_LOG
-
-		if (r.dwGuildID != 0)
-			continue;
-
 		if (!map_allow_find(r.lMapIndex))
 			continue;
 
 		const TMapRegion * region = SECTREE_MANAGER::instance().GetMapRegion(r.lMapIndex);
 		if (!region)
 			continue;
+		
+		if (r.dwGuildID != 0)
+		{
+
+			LPCHARACTER tch = CHARACTER_MANAGER::instance().SpawnMob(8030, r.lMapIndex, region->sx + r.x + (r.width / 2), region->sy + r.y + (r.height / 2), 0);
+
+			if (!tch)
+			{
+				sys_err("Cannot create guild stone!");
+				return;
+			}
+
+			tch->guildStone = r.dwGuildID;
+
+			continue;
+		}
+
 
 		CHARACTER_MANAGER::instance().SpawnMob(20040, r.lMapIndex, region->sx + r.x + (r.width / 2), region->sy + r.y + (r.height / 2), 0);
 	}
 }
+
+
 
 void CManager::DeleteObject(DWORD dwID) // from DB
 {

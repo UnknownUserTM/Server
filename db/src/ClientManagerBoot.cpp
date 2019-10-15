@@ -906,7 +906,7 @@ bool CClientManager::InitializeObjectProto()
 
 	char query[4096];
 	snprintf(query, sizeof(query),
-			"SELECT vnum, price, materials, upgrade_vnum, upgrade_limit_time, life, reg_1, reg_2, reg_3, reg_4, npc, group_vnum, dependent_group "
+			"SELECT vnum, price, materials, upgrade_vnum, upgrade_limit_time, life, reg_1, reg_2, reg_3, reg_4, npc, group_vnum, dependent_group, npc_distance "
 			"FROM object_proto%s ORDER BY vnum",
 			GetTablePostfix());
 
@@ -931,6 +931,7 @@ bool CClientManager::InitializeObjectProto()
 			memset(&t, 0, sizeof(t));
 
 			int col = 0;
+			int dist = 0;
 
 			str_to_number(t.dwVnum, data[col++]);
 			str_to_number(t.dwPrice, data[col++]);
@@ -958,9 +959,10 @@ bool CClientManager::InitializeObjectProto()
 			str_to_number(t.dwNPCVnum, data[col++]);
 			str_to_number(t.dwGroupVnum, data[col++]);
 			str_to_number(t.dwDependOnGroupVnum, data[col++]);
+			str_to_number(dist, data[col++]);
 
 			t.lNPCX = 0;
-			t.lNPCY = MAX(t.lRegion[1], t.lRegion[3])+300;
+			t.lNPCY = MAX(t.lRegion[1], t.lRegion[3]) + dist;
 			// END_OF_ADD_BUILDING_NPC
 
 			sys_log(0, "OBJ_PROTO: vnum %lu price %lu mat %lu %lu",

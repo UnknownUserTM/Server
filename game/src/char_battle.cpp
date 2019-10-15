@@ -1264,8 +1264,26 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 				}
 				
 			}
-			
-		}
+			if(IsStone()) 
+			{
+				// int newCount = GetQuestFlag("player_statistic.statistic_13") + 1;
+				// SetQuestFlag("player_statistic.statistic_13",newCount);
+				// ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",13,GetQuestFlag("player_statistic.statistic_13")); // PVM_MONSTER_KILL 13
+				
+				if(GetRaceNum() == 8030) {
+					CGuild* pGuild = CGuildManager::instance().FindGuild(guildStone);
+					pGuild->RequestLandDestruction();
+				}
+			}
+			// else
+			// {
+				// // int newCount = GetQuestFlag("player_statistic.statistic_11") + 1;
+				// // SetQuestFlag("player_statistic.statistic_11",newCount);
+				// ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",11,GetQuestFlag("player_statistic.statistic_11")); // PVM_MONSTER_KILL 11
+			// }				
+		
+		
+		}	
 		
 		if (IsPC())
 		{
@@ -1279,6 +1297,7 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			pkKiller->SetQuestNPCID(GetVID());
 			quest::CQuestManager::instance().Kill(pkKiller->GetPlayerID(), quest::QUEST_NO_NPC);
 			CGuildManager::instance().Kill(pkKiller, this);
+			
 		}
 	}
 

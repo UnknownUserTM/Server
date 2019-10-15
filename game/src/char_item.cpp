@@ -8663,7 +8663,7 @@ bool CHARACTER::CanEquipNow(const LPITEM item, const TItemPos& srcCell, const TI
 		{
 			if(itemSubType != weapon->GetSubType() && weapon->IsEquipped())
 			{
-				ChatPacket(CHAT_TYPE_INFO, "Waffenwechsel nicht möglich. Zuerst Waffenkostüm ablegen.");
+				ChatPacket(CHAT_TYPE_INFO, "Waffenwechsel nicht moglich. Zuerst Waffenkostum ablegen.");
 				return false;			
 			}
 		}

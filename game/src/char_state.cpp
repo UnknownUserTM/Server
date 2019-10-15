@@ -22,6 +22,7 @@
 #include "locale_service.h"
 #include "BlueDragon.h"
 #include "dungeon.h"
+#include "guild.h"
 
 #include "../../common/VnumHelper.h"
 

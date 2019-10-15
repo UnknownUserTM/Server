@@ -469,6 +469,7 @@ void CHARACTER::Initialize()
 	last_mount_pet_costume_use = 0;
 	get_fire_bucket_count = 0;
 	petSealItemIndex = 0;
+	guildStone = 0;
 	
 	//RemoveAffect(AFFECT_MOUNT);
 	//RemoveAffect(AFFECT_MOUNT_BONUS);		
@@ -8206,3 +8207,12 @@ DWORD CHARACTER::CalculateDeadTime(BYTE type)
 	return 0;
 }
 #endif
+
+
+// void DestroyGuildLand(DWORD dwGuildID)
+// {
+	// CGuild* pGuild = CGuildManager::instance().FindGuild(dwGuildID);
+	// pGuild->RequestLandDestruction();
+// }
+
+
