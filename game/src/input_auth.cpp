@@ -121,6 +121,17 @@ void CInputAuth::Login(LPDESC d, const char * c_pData)
 		d->Packet(&failurePacket, sizeof(failurePacket));
 		return;
 	}
+	
+#ifdef NEW_CLIENT_VERSION_CHECK
+	if (strncmp(g_stClientVersion.c_str(), pinfo->clientVersion, sizeof(pinfo->clientVersion)))
+	{
+		TPacketGCLoginFailure failurePacket;
+		failurePacket.header = HEADER_GC_LOGIN_FAILURE;
+		strlcpy(failurePacket.szStatus, "WRONGVER", sizeof(failurePacket.szStatus));
+		d->Packet(&failurePacket, sizeof(failurePacket));
+		return;
+	}
+#endif
 
 	if (DESC_MANAGER::instance().FindByLoginName(login))
 	{
