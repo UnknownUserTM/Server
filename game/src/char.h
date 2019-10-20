@@ -672,6 +672,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 #ifdef RENEWAL_DEAD_PACKET
 		DWORD			CalculateDeadTime(BYTE type);
 #endif
+		// void			GenerateAnimasphere(LPCHARACTER ch);
 		DWORD			GetAID() const;
 		int				GetChangeEmpireCount() const;
 		void			SetChangeEmpireCount();

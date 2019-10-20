@@ -38,6 +38,20 @@
 #include "auction_manager.h"
 #endif
 
+ACMD(do_timestamp_test)
+{
+	time_t ct = get_global_time();
+	struct tm tm = *localtime(&ct);
+
+	ch->ChatPacket(CHAT_TYPE_INFO,
+			"%02d %02d %02d:%02d:%02d | ",
+			tm.tm_mon + 1,
+			tm.tm_mday,
+			tm.tm_hour,
+			tm.tm_min,
+			tm.tm_sec);
+}
+
 ACMD(do_user_open_all_giftbox)
 {
 	char arg1[256];

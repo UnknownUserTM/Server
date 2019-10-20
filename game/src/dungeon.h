@@ -92,7 +92,9 @@ class CDungeon
 	void	SendDestPositionToParty(LPPARTY pParty, long x, long y);
 
 	void	CheckEliminated();
-
+	void	SetDungeonScale(int scaleValue);
+	void	DoMonsterHPScale(LPCHARACTER ch);
+	int	GetDungeonScale() { return m_iMonsterScale; };
 	void	JumpAll(long lFromMapIndex, int x, int y);
 	void	WarpAll(long lFromMapIndex, int x, int y);
 	void	JumpParty(LPPARTY pParty, long lFromMapIndex, int x, int y);
@@ -115,7 +117,10 @@ class CDungeon
 	void	CreateItemGroup (std::string& group_name, ItemGroup& item_group);
 	const ItemGroup* GetItemGroup (std::string& group_name);
 	//void	InsertItemGroup (std::string& group_name, DWORD item_vnum);
+	
 
+	
+	
 	template <class Func> Func ForEachMember(Func f);
 
 	bool IsAllPCNearTo( int x, int y, int dist );
@@ -145,6 +150,7 @@ class CDungeon
 	bool		m_bUseRevive;
 
 	int		m_iMonsterCount;
+	int		m_iMonsterScale;
 
 	bool		m_bExitAllAtEliminate;
 	bool		m_bWarpAtEliminate;

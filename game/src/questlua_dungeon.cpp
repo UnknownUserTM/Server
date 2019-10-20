@@ -1783,7 +1783,27 @@ namespace quest
 
 		return 0;
 	}
+	
+	int dungeon_set_scale(lua_State * L)
+	{
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
 
+		pDungeon->SetDungeonScale(lua_tonumber(L, 1));
+		
+		return 0;
+	}	
+	
+	int dungeon_get_scale(lua_State * L)
+	{
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		lua_pushnumber(L, pDungeon->GetDungeonScale());
+		
+		return 1;
+	}	
+	
 	void RegisterDungeonFunctionTable()
 	{
 		luaL_reg dungeon_functions[] =
@@ -1828,6 +1848,8 @@ namespace quest
 			{ "new_jump_all",		dungeon_new_jump_all	},
 			{ "count_player",		dungeon_count_players	},
 			
+			{ "set_scale",		dungeon_set_scale	},
+			{ "get_scale",		dungeon_get_scale	},
 			
 			
 			// Neue Dungeon Funktionen

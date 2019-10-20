@@ -444,6 +444,107 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMob(DWORD dwVnum, long lMapIndex, long x, lo
 	return (ch);
 }
 
+LPCHARACTER CHARACTER_MANAGER::SpawnBoss(DWORD dwVnum, long lMapIndex, long x, long y, long z, bool bSpawnMotion, int iRot, bool bShow)
+{
+	const CMob * pkMob = CMobManager::instance().Get(dwVnum);
+	if (!pkMob)
+	{
+		sys_err("SpawnMob: no mob data for vnum %u", dwVnum);
+		return NULL;
+	}
+	
+	time_t ct = get_global_time();
+	struct tm tm = *localtime(&ct);
+
+	if(tm.tm_min != 0)
+	{
+		if(tm.tm_sec > 3) 
+			return NULL;
+	}
+
+	if (!(pkMob->m_table.bType == CHAR_TYPE_NPC || pkMob->m_table.bType == CHAR_TYPE_WARP || pkMob->m_table.bType == CHAR_TYPE_GOTO) || mining::IsVeinOfOre (dwVnum))
+	{
+		LPSECTREE tree = SECTREE_MANAGER::instance().Get(lMapIndex, x, y);
+
+		if (!tree)
+		{
+			sys_log(0, "no sectree for spawn at %d %d mobvnum %d mapindex %d", x, y, dwVnum, lMapIndex);
+			return NULL;
+		}
+
+		DWORD dwAttr = tree->GetAttribute(x, y);
+
+		bool is_set = false;
+
+		if ( mining::IsVeinOfOre (dwVnum) ) is_set = IS_SET(dwAttr, ATTR_BLOCK);
+		else is_set = IS_SET(dwAttr, ATTR_BLOCK | ATTR_OBJECT);
+
+		if ( is_set )
+		{
+			// SPAWN_BLOCK_LOG
+			static bool s_isLog=quest::CQuestManager::instance().GetEventFlag("spawn_block_log");
+			static DWORD s_nextTime=get_global_time()+10000;
+
+			DWORD curTime=get_global_time();
+
+			if (curTime>s_nextTime)
+			{
+				s_nextTime=curTime;
+				s_isLog=quest::CQuestManager::instance().GetEventFlag("spawn_block_log");
+
+			}
+
+			if (s_isLog)
+				sys_log(0, "SpawnMob: BLOCKED position for spawn %s %u at %d %d (attr %u)", pkMob->m_table.szName, dwVnum, x, y, dwAttr);
+			// END_OF_SPAWN_BLOCK_LOG
+			return NULL;
+		}
+
+		if (IS_SET(dwAttr, ATTR_BANPK))
+		{
+			sys_log(0, "SpawnMob: BAN_PK position for mob spawn %s %u at %d %d", pkMob->m_table.szName, dwVnum, x, y);
+			return NULL;
+		}
+	}
+
+	LPSECTREE sectree = SECTREE_MANAGER::instance().Get(lMapIndex, x, y);
+
+	if (!sectree)
+	{
+		sys_log(0, "SpawnMob: cannot create monster at non-exist sectree %d x %d (map %d)", x, y, lMapIndex);
+		return NULL;
+	}
+
+	LPCHARACTER ch = CHARACTER_MANAGER::instance().CreateCharacter(pkMob->m_table.szLocaleName);
+
+	if (!ch)
+	{
+		sys_log(0, "SpawnMob: cannot create new character");
+		return NULL;
+	}
+
+	if (iRot == -1)
+		iRot = number(0, 360);
+
+	ch->SetProto(pkMob);
+
+	// if mob is npc with no empire assigned, assign to empire of map
+	if (pkMob->m_table.bType == CHAR_TYPE_NPC)
+		if (ch->GetEmpire() == 0)
+			ch->SetEmpire(SECTREE_MANAGER::instance().GetEmpireFromMapIndex(lMapIndex));
+
+	ch->SetRotation(iRot);
+
+	if (bShow && !ch->Show(lMapIndex, x, y, z, bSpawnMotion))
+	{
+		M2_DESTROY_CHARACTER(ch);
+		sys_log(0, "SpawnMob: cannot show monster");
+		return NULL;
+	}
+
+	return (ch);
+}
+
 LPCHARACTER CHARACTER_MANAGER::SpawnMobRange(DWORD dwVnum, long lMapIndex, int sx, int sy, int ex, int ey, bool bIsException, bool bSpawnMotion, bool bAggressive )
 {
 	const CMob * pkMob = CMobManager::instance().Get(dwVnum);
@@ -472,6 +573,7 @@ LPCHARACTER CHARACTER_MANAGER::SpawnMobRange(DWORD dwVnum, long lMapIndex, int s
 			sys_log(1, "MOB_SPAWN: %s(%d) %dx%d", ch->GetName(), (DWORD) ch->GetVID(), ch->GetX(), ch->GetY());
 			if ( bAggressive )
 				ch->SetAggressive();
+
 			return (ch);
 		}
 	}
@@ -629,6 +731,11 @@ LPCHARACTER CHARACTER_MANAGER::SpawnGroup(DWORD dwVnum, long lMapIndex, int sx, 
 
 			pkParty = CPartyManager::instance().CreateParty(pkChrMaster);
 		}
+		
+		// if (pDungeon->GetDungeonScale())
+		// {
+			// pDungeon->DoMonsterHPScale(tch);
+		// }
 
 		if (bAggressive)
 			tch->SetAggressive();

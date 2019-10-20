@@ -477,7 +477,7 @@ namespace quest
 
 		lua_pushnumber(L, (pGuild!=NULL)?pGuild->GetGuildMoney():0);
 		return 1;
-	}
+	}	
 
 	int guild_get_max_member0(lua_State* L)
 	{
@@ -662,7 +662,20 @@ namespace quest
 	}
 
 #endif
+	int guild_give_money(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
 
+		CGuild* pGuild = ch->GetGuild();
+
+		if (pGuild!=NULL) {
+			
+			pGuild->RecvMoneyChange(lua_tonumber(L, 1));
+			
+		}
+		return 0;
+	}
+	
 	void RegisterGuildFunctionTable()
 	{
 		luaL_reg guild_functions[] =
@@ -709,6 +722,8 @@ namespace quest
 			{ "offer_exp0",				guild_offer_exp0			},	// give player's <exp> to guild [return lua boolean=successfulness]
 			{ "give_exp0",				guild_give_exp0				},	// give <exp> to guild [return nothing]
 #endif
+
+			{ "give_money",				guild_give_money				},	// give <exp> to guild [return nothing]
 			{ NULL,						NULL						}
 		};
 

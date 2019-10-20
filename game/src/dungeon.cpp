@@ -55,6 +55,7 @@ void CDungeon::Initialize()
 	m_bUseRevive = false;
 
 	m_iMonsterCount = 0;
+	m_iMonsterScale = 0;
 
 	m_bExitAllAtEliminate = false;
 	m_bWarpAtEliminate = false;
@@ -772,6 +773,11 @@ LPCHARACTER CDungeon::SpawnMob(DWORD vnum, int x, int y, int dir)
 		ch->SetDungeon(this);
 		sys_log(0, "CDungeon::SpawnMob name %s", ch->GetName());
 	}
+	
+	if (m_iMonsterScale)
+	{
+		DoMonsterHPScale(ch);
+	}
 
 	return ch;
 }
@@ -1422,3 +1428,29 @@ const CDungeon::ItemGroup* CDungeon::GetItemGroup (std::string& group_name)
 	else
 		return NULL;
 }
+
+void CDungeon::SetDungeonScale(int scaleValue)
+{
+	m_iMonsterScale = scaleValue;
+}
+
+void CDungeon::DoMonsterHPScale(LPCHARACTER ch)
+{
+	if (!ch)
+	{
+		sys_err("cannot find ch to Scale!");
+		return;
+	}
+	
+	int m_HP = ch->GetMaxHP();
+	int n_HP = m_HP + (m_HP * m_iMonsterScale) / 100;
+	
+	ch->SetMaxHP(n_HP);
+	ch->SetHP(n_HP);
+
+}
+
+// int CDungeon::GetDungeonScale()
+// {
+	// return m_iMonsterScale;
+// }

@@ -5,6 +5,8 @@
 #include "locale_service.h"
 #include "log.h"
 #include "desc.h"
+
+ACMD(do_timestamp_test);
 ACMD(do_user_bugreport);
 ACMD(do_user_horse_ride);
 ACMD(do_user_horse_back);
@@ -607,7 +609,7 @@ struct command_info cmd_info[] =
 
 	{ "set_se_rank",			do_set_se_rang,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "rem_se_rank",			do_rem_se_rang,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
-
+	{ "timestamp_test",			do_timestamp_test,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
 	
 	{ "report",			do_user_bugreport,	0,	POS_DEAD,	GM_PLAYER	},
 	{ "plague",			do_plague,	0,	POS_DEAD,	GM_HIGH_WIZARD	},

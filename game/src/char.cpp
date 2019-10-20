@@ -2624,7 +2624,7 @@ EVENTFUNC(recovery_event)
 		ch->CheckTarget();
 		//ch->UpdateSectree(); // 여기서 이걸 왜하지?
 		ch->UpdateKillerMode();
-
+		// ch->GenerateAnimasphere(ch);
 		if (ch->IsAffectFlag(AFF_POISON) == true)
 		{
 			// 중독인 경우 자동회복 금지
@@ -8207,6 +8207,19 @@ DWORD CHARACTER::CalculateDeadTime(BYTE type)
 	return 0;
 }
 #endif
+
+// void GenerateAnimasphere(LPCHARACTER ch)
+// {
+	// int timeLeft = ch->GetQuestFlag("game_option.animasphere_time");
+	// if (timeLeft < get_global_time())
+	// {
+		// int newTime = get_global_time() + 30;
+		// int newSphereCount = ch->GetQuestFlag("game_option.animasphere_count") + 1;
+		// ch->SetQuestFlag("game_option.animasphere_count",newSphereCount);
+		// ch->SetQuestFlag("game_option.animasphere_time",newTime);
+		// ch->ChatPacket(CHAT_TYPE_NOTICE, "Du hast eine Animasphare regeneriert!");
+	// }
+// }
 
 
 // void DestroyGuildLand(DWORD dwGuildID)
