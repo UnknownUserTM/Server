@@ -101,7 +101,7 @@ bool		g_bEmpireWhisper = true;
 BYTE		g_bAuthServer = false;
 
 bool		g_bCheckClientVersion = true;
-string	g_stClientVersion = "1215955205";
+string		g_stClientVersion = CLIENT_VERSION;
 
 BYTE		g_bBilling = false;
 
