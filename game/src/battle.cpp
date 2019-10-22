@@ -163,7 +163,7 @@ int battle_melee_attack(LPCHARACTER ch, LPCHARACTER victim)
 
 	if (!victim->IsBuilding())
 	{
-		int max = 300;
+		int max = 325;
 
 		if (false == ch->IsPC())
 		{
