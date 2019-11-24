@@ -715,6 +715,58 @@ namespace quest
 			lua_pushnumber (L, 0);
 		return 1;
 	}
+	
+	int pc_give_and_return_cell(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+
+		if (!lua_isstring(L, 1) && !lua_isnumber(L, 1))
+		{
+			sys_err("QUEST Make item call error : wrong argument");
+			lua_pushnumber (L, 0);
+			return 1;
+		}
+
+		DWORD dwVnum;
+
+		if (lua_isnumber(L, 1)) // 번호인경우 번호로 준다.
+		{
+			dwVnum = (int) lua_tonumber(L, 1);
+		}
+		else if (!ITEM_MANAGER::instance().GetVnum(lua_tostring(L, 1), dwVnum))
+		{
+			sys_err("QUEST Make item call error : wrong item name : %s", lua_tostring(L,1));
+			lua_pushnumber (L, 0);
+
+			return 1;
+		}
+
+		int icount = 1;
+		if (lua_isnumber(L,2) && lua_tonumber(L,2)>0)
+		{
+			icount = (int)rint(lua_tonumber(L,2));
+			if (icount<=0)
+			{
+				sys_err("QUEST Make item call error : wrong item count : %g", lua_tonumber(L,2));
+				lua_pushnumber (L, 0);
+				return 1;
+			}
+		}
+
+		sys_log(0, "QUEST [REWARD] item %s to %s", lua_tostring(L, 1), ch->GetName());
+
+		PC* pPC = CQuestManager::instance().GetCurrentPC();
+
+		LogManager::instance().QuestRewardLog(pPC->GetCurrentQuestName().c_str(), ch->GetPlayerID(), ch->GetLevel(), dwVnum, icount);
+
+		LPITEM item = ch->AutoGiveItem(dwVnum, icount);
+
+		if (NULL != item)
+			lua_pushnumber (L, item->GetCell());
+		else
+			lua_pushnumber (L, 0);
+		return 1;
+	}	
 
 #ifdef ENABLE_DICE_SYSTEM
 	int pc_give_or_drop_item_with_dice(lua_State* L)
@@ -3738,6 +3790,8 @@ teleport_area:
 			{ "give_exp2",		pc_give_exp2		},
 			{ "give_item",		pc_give_item		},
 			{ "give_item2",		pc_give_or_drop_item	},
+			{ "give_item_and_return_cell",		pc_give_and_return_cell	},
+
 #ifdef ENABLE_DICE_SYSTEM
 			{ "give_item2_with_dice",	pc_give_or_drop_item_with_dice	},
 #endif

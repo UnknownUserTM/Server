@@ -5,7 +5,8 @@
 #include "locale_service.h"
 #include "log.h"
 #include "desc.h"
-
+ACMD(do_reset_pickup_filter);
+ACMD(do_change_pickup_filter);
 ACMD(do_timestamp_test);
 ACMD(do_user_bugreport);
 ACMD(do_user_horse_ride);
@@ -610,7 +611,9 @@ struct command_info cmd_info[] =
 	{ "set_se_rank",			do_set_se_rang,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "rem_se_rank",			do_rem_se_rang,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "timestamp_test",			do_timestamp_test,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
-	
+	{ "change_pickup_filter",	do_change_pickup_filter,	0,	POS_DEAD,	GM_PLAYER	},
+	{ "reset_pickup_filter",	do_reset_pickup_filter,	0,	POS_DEAD,	GM_PLAYER	},
+		
 	{ "report",			do_user_bugreport,	0,	POS_DEAD,	GM_PLAYER	},
 	{ "plague",			do_plague,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
 	
@@ -702,7 +705,7 @@ struct command_info cmd_info[] =
 	{ "item_full_set",	do_item_full_set, 0, POS_DEAD,		GM_LOW_WIZARD},
 	{ "attr_full_set",	do_attr_full_set, 0, POS_DEAD,		GM_LOW_WIZARD},
 	{ "all_skill_master",	do_all_skill_master,	0,	POS_DEAD,	GM_LOW_WIZARD},
-	{ "use_item",		do_use_item,	0, POS_DEAD,		GM_LOW_WIZARD},
+	{ "use_item",		do_use_item,	0, POS_DEAD,		GM_PLAYER},
 
 	{ "dragon_soul",				do_dragon_soul,				0,	POS_DEAD,	GM_PLAYER	},
 	{ "ds_list",				do_ds_list,				0,	POS_DEAD,	GM_PLAYER	},

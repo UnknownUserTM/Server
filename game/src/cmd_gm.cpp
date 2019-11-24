@@ -2386,7 +2386,7 @@ ACMD(do_level)
 	str_to_number(level, arg2);
 
 	ch->ResetPoint(MINMAX(1, level, gPlayerMaxLevel));
-
+	ch->PointChange(POINT_EXP,0);
 	ch->ClearSkill();
 	ch->ClearSubSkill();
 }

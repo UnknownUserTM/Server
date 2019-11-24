@@ -38,6 +38,144 @@
 #include "auction_manager.h"
 #endif
 
+// ACMD(do_use_item)
+// {
+	// char arg1[256];
+	// one_argument(argument, arg1, sizeof(arg1));
+	// if (!*arg1)
+	// {
+		// ch->ChatPacket(CHAT_TYPE_INFO, "[do_use_item] Error 1: !*arg1");
+		// return;
+	// }		
+	// int index;
+	// str_to_number(index, arg1);		
+	// ch->UseItem(TItemPos (INVENTORY, index));
+// }
+
+ACMD(do_reset_pickup_filter)
+{
+	ch->RemoveAffect(AFFECT_PICKUP_WEAPON_BLOCK);
+	ch->RemoveAffect(AFFECT_PICKUP_ARMOR_BLOCK);
+	ch->RemoveAffect(AFFECT_PICKUP_JEWELRY_BLOCK);
+	ch->RemoveAffect(AFFECT_PICKUP_MATERIAL_BLOCK);
+	ch->RemoveAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK);
+	ch->RemoveAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK);
+
+	ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Alle Affects wurden gecleart. Relog ist empfehlenswert.");
+	
+}
+
+ACMD(do_change_pickup_filter)
+{
+	// char arg1[256], arg2[256];
+	// two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));	
+	char arg1[256];
+	one_argument(argument, arg1, sizeof(arg1));
+	if (!*arg1)
+	{
+		ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Error 1: !*arg1");
+		return;
+	}		
+	// if (!*arg2)
+	// {
+		// ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Error 2: !*arg2");
+		// return;
+	// }	
+	
+	int index;
+	// int status; // 0:Off, 1:On
+	str_to_number(index, arg1);	
+	// str_to_number(status, arg2);	
+	
+	switch (index)
+	{
+		case 1: // Weapon
+			{
+				if(ch->FindAffect(AFFECT_PICKUP_WEAPON_BLOCK))
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun wieder Waffen auf.");
+					ch->RemoveAffect(AFFECT_PICKUP_WEAPON_BLOCK);
+				}
+				else
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Waffen mehr auf.");
+					ch->AddAffect(AFFECT_PICKUP_WEAPON_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+				}					
+			}
+			break;
+		case 2: // Armor
+			{
+				if(ch->FindAffect(AFFECT_PICKUP_ARMOR_BLOCK))
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun wieder Rustungen auf.");
+					ch->RemoveAffect(AFFECT_PICKUP_ARMOR_BLOCK);
+				}
+				else
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Rustungen mehr auf.");
+					ch->AddAffect(AFFECT_PICKUP_ARMOR_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+				}					
+			}
+			break;
+		case 3: // Jewelry
+			{
+				if(ch->FindAffect(AFFECT_PICKUP_JEWELRY_BLOCK))
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun wieder Schmuck auf.");
+					ch->RemoveAffect(AFFECT_PICKUP_JEWELRY_BLOCK);
+				}
+				else
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keinen Schmuck mehr auf.");
+					ch->AddAffect(AFFECT_PICKUP_JEWELRY_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+				}					
+			}
+			break;
+		case 4: // Material
+			{
+				if(ch->FindAffect(AFFECT_PICKUP_MATERIAL_BLOCK))
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun wieder Upp-Items auf.");
+					ch->RemoveAffect(AFFECT_PICKUP_MATERIAL_BLOCK);
+				}
+				else
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Upp-Items mehr auf.");
+					ch->AddAffect(AFFECT_PICKUP_MATERIAL_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+				}					
+			}
+			break;
+		case 5: // Ghoststone
+			{
+				if(ch->FindAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK))
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun wieder Geiststeine auf.");
+					ch->RemoveAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK);
+				}
+				else
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Geiststeine mehr auf.");
+					ch->AddAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+				}					
+			}
+			break;		
+		case 6: // Skillbook
+			{
+				if(ch->FindAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK))
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun wieder Fertigkeitsbucher auf.");
+					ch->RemoveAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK);
+				}
+				else
+				{
+					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Fertigkeitsbucher mehr auf.");
+					ch->AddAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+				}					
+			}
+			break;	
+	}	
+}
+
 ACMD(do_timestamp_test)
 {
 	time_t ct = get_global_time();
