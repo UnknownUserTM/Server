@@ -438,7 +438,7 @@ bool CItem::DistanceValid(LPCHARACTER ch)
 
 	int iDist = DISTANCE_APPROX(GetX() - ch->GetX(), GetY() - ch->GetY());
 
-	if (iDist > 300)
+	if (iDist > 900) // 300 Normal
 		return false;
 
 	return true;
