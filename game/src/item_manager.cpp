@@ -337,7 +337,11 @@ LPITEM ITEM_MANAGER::CreateItem(DWORD vnum, DWORD count, DWORD id, bool bTryMagi
 		if (table->bGainSocketPct)
 			item->AlterToSocketItem(table->bGainSocketPct);
 		
-		
+		if (vnum == 160490)
+		{
+			item->SetSocket(0,1);			
+			item->SetSocket(1,item->GetValue(0));			
+		}		
 		if (vnum == 91200)
 		{
 			item->SetSocket(0,1);

@@ -370,8 +370,8 @@ bool NewPlayerTable(TPlayerTable * table,
 	table->x 	= LYCAN_CREATE_START_X(bEmpire, job) + number(-300, 300);
 	table->y 	= LYCAN_CREATE_START_Y(bEmpire, job) + number(-300, 300);
 #else
-	table->x 	= CREATE_START_X(bEmpire) + number(-300, 300);
-	table->y 	= CREATE_START_Y(bEmpire) + number(-300, 300);
+	table->x 	= CREATE_START_X(bEmpire);
+	table->y 	= CREATE_START_Y(bEmpire);
 #endif
 	table->z	= 0;
 	table->dir	= 0;
@@ -495,8 +495,8 @@ bool NewPlayerTable2(TPlayerTable * table, const char * name, BYTE race, BYTE sh
 	table->x 		= LYCAN_CREATE_START_X(bEmpire, job) + number(-300, 300);
 	table->y 		= LYCAN_CREATE_START_Y(bEmpire, job) + number(-300, 300);
 #else
-	table->x		= CREATE_START_X(bEmpire) + number(-300, 300);
-	table->y		= CREATE_START_Y(bEmpire) + number(-300, 300);
+	table->x		= CREATE_START_X(bEmpire);
+	table->y		= CREATE_START_Y(bEmpire);
 #endif
 	table->z		= 0;
 	table->dir		= 0;
@@ -714,8 +714,53 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	if (!ch->FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
 		ch->AddAffect(AFFECT_SKILL_NO_BOOK_DELAY, POINT_NONE, 0, 0, 536870911, 0, true);
 	
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",4,ch->GetRealPoint(POINT_PLAYTIME)); // PlayTime 4
+	
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",5,ch->GetQuestFlag("player_statistic.statistic_5")); // PVP_DUELL 5
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",6,ch->GetQuestFlag("player_statistic.statistic_6")); // PVP_DUELL_WON 6
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",7,ch->GetQuestFlag("player_statistic.statistic_7")); // PVP_DUELL_LOST 7
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",8,ch->GetQuestFlag("player_statistic.statistic_8")); // PVP_SHINSOO_KILL 8
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",9,ch->GetQuestFlag("player_statistic.statistic_9")); // PVP_CHUNJO_KILL 9
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",10,ch->GetQuestFlag("player_statistic.statistic_10")); // PVP_JINNO_KILL 10
+
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",11,ch->GetQuestFlag("player_statistic.statistic_11")); // PVM_MONSTER_KILL 11
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",12,ch->GetQuestFlag("player_statistic.statistic_12")); // PVM_PLAYER_DEAD 12
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",13,ch->GetQuestFlag("player_statistic.statistic_13")); // PVM_STONE_KILL 13
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",14,ch->GetQuestFlag("player_statistic.statistic_14")); // PVM_DUNGEON_COMPL 14
+	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",15,ch->GetQuestFlag("player_statistic.statistic_15")); // PVM_ACHIEVEMENT 15
+
 	ch->block_exp = false;
 
+	if (ch->FindAffect(AFFECT_PICKUP_WEAPON_BLOCK))
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND,"pickufilter 1");
+		ch->ChatPacket(CHAT_TYPE_INFO,"PickUp-Filter: Waffen werden nicht aufgehoben.");
+	}
+	if (ch->FindAffect(AFFECT_PICKUP_ARMOR_BLOCK))
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND,"pickufilter 2");
+		ch->ChatPacket(CHAT_TYPE_INFO,"PickUp-Filter: Rustungen werden nicht aufgehoben.");
+	}
+	if (ch->FindAffect(AFFECT_PICKUP_JEWELRY_BLOCK))
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND,"pickufilter 3");
+		ch->ChatPacket(CHAT_TYPE_INFO,"PickUp-Filter: Schmuck wird nicht aufgehoben.");
+	}	
+	if (ch->FindAffect(AFFECT_PICKUP_MATERIAL_BLOCK))
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND,"pickufilter 4");
+		ch->ChatPacket(CHAT_TYPE_INFO,"PickUp-Filter: Upp-Items werden nicht aufgehoben.");
+	}
+	if (ch->FindAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK))
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND,"pickufilter 5");
+		ch->ChatPacket(CHAT_TYPE_INFO,"PickUp-Filter: Geiststeine werden nicht aufgehoben.");
+	}
+	if (ch->FindAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK))
+	{
+		ch->ChatPacket(CHAT_TYPE_COMMAND,"pickufilter 6");
+		ch->ChatPacket(CHAT_TYPE_INFO,"PickUp-Filter: Fertigkeitsbucher werden nicht aufgehoben.");
+	}
 	if (g_bCheckClientVersion)
 	{
 		sys_log(0, "VERSION CHECK %s %s", g_stClientVersion.c_str(), d->GetClientVersion());

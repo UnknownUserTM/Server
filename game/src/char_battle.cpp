@@ -1351,7 +1351,9 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 	}
 
 	SetPosition(POS_DEAD);
-	ClearAffect(true);
+	
+	if(pkKiller->IsPC())
+		ClearAffect(true);
 
 	if (pkKiller && IsPC())
 	{

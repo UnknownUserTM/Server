@@ -99,7 +99,7 @@ ACMD(do_change_pickup_filter)
 				else
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Waffen mehr auf.");
-					ch->AddAffect(AFFECT_PICKUP_WEAPON_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+					ch->AddAffect(AFFECT_PICKUP_WEAPON_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, true, false);	
 				}					
 			}
 			break;
@@ -113,7 +113,7 @@ ACMD(do_change_pickup_filter)
 				else
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Rustungen mehr auf.");
-					ch->AddAffect(AFFECT_PICKUP_ARMOR_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+					ch->AddAffect(AFFECT_PICKUP_ARMOR_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, true, false);	
 				}					
 			}
 			break;
@@ -127,7 +127,7 @@ ACMD(do_change_pickup_filter)
 				else
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keinen Schmuck mehr auf.");
-					ch->AddAffect(AFFECT_PICKUP_JEWELRY_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+					ch->AddAffect(AFFECT_PICKUP_JEWELRY_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, true, false);	
 				}					
 			}
 			break;
@@ -141,7 +141,7 @@ ACMD(do_change_pickup_filter)
 				else
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Upp-Items mehr auf.");
-					ch->AddAffect(AFFECT_PICKUP_MATERIAL_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+					ch->AddAffect(AFFECT_PICKUP_MATERIAL_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, true, false);	
 				}					
 			}
 			break;
@@ -155,7 +155,7 @@ ACMD(do_change_pickup_filter)
 				else
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Geiststeine mehr auf.");
-					ch->AddAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+					ch->AddAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, true, false);	
 				}					
 			}
 			break;		
@@ -169,7 +169,7 @@ ACMD(do_change_pickup_filter)
 				else
 				{
 					ch->ChatPacket(CHAT_TYPE_INFO, "[PickUpFilter] Du hebst nun keine Fertigkeitsbucher mehr auf.");
-					ch->AddAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, false, false);	
+					ch->AddAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK, APPLY_NONE, 0, AFF_NONE, 60*60*24*365*60, 0, true, false);	
 				}					
 			}
 			break;	

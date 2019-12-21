@@ -120,6 +120,19 @@ static bool read_line(FILE *fp, LPREGEN regen)
 					regen->type = REGEN_TYPE_GROUP_GROUP;
 				else if (szTmp[0] == 's')
 					regen->type = REGEN_TYPE_ANYWHERE;
+				
+				else if (szTmp[0] == 'b')
+					if (szTmp[1] == 'r')
+					{
+						regen->type = REGEN_TYPE_BOSS_RANDOM;
+						regen->is_aggressive = true;
+					}
+					else
+					{
+						regen->type = REGEN_TYPE_BOSS;
+						regen->is_aggressive = true;
+					}
+				
 				else
 				{
 					sys_err("read_line: unknown regen type %c", szTmp[0]);
@@ -343,6 +356,32 @@ static void regen_spawn(LPREGEN regen, bool bOnce)
 			if (ch)
 				++regen->count;
 		}
+		else if (regen->type == REGEN_TYPE_BOSS)
+		{
+			ch = CHARACTER_MANAGER::instance().SpawnBoss(regen->vnum,
+					regen->lMapIndex,
+					regen->sx,
+					regen->sy,
+					regen->z_section,
+					false,
+					regen->direction == 0 ? number(0, 7) * 45 : (regen->direction - 1) * 45);
+
+			if (ch)
+				++regen->count;
+		}
+		else if (regen->type == REGEN_TYPE_BOSS_RANDOM)
+		{
+			ch = CHARACTER_MANAGER::instance().SpawnBoss(regen->vnum,
+					regen->lMapIndex,
+					regen->sx,
+					regen->sy,
+					regen->z_section,
+					false,
+					regen->direction == 0 ? number(0, 7) * 45 : (regen->direction - 1) * 45);
+
+			if (ch)
+				++regen->count;
+		}
 		else if (regen->sx == regen->ex && regen->sy == regen->ey)
 		{
 			ch = CHARACTER_MANAGER::instance().SpawnMob(regen->vnum,
@@ -375,6 +414,20 @@ static void regen_spawn(LPREGEN regen, bool bOnce)
 				if (CHARACTER_MANAGER::Instance().SpawnGroupGroup(regen->vnum, regen->lMapIndex, regen->sx, regen->sy, regen->ex, regen->ey, bOnce ? NULL : regen, regen->is_aggressive))
 					++regen->count;
 			}
+			// if (regen->type == REGEN_TYPE_BOSS)
+			// {
+				// ch = CHARACTER_MANAGER::Instance().SpawnMobRange(regen->vnum, regen->lMapIndex, regen->sx, regen->sy, regen->ex, regen->ey, true, regen->is_aggressive, regen->is_aggressive );
+
+				// if (ch)
+					// ++regen->count;
+			// }
+			// if (regen->type == REGEN_TYPE_BOSS_RANDOM)
+			// {
+				// ch = CHARACTER_MANAGER::Instance().SpawnMobRange(regen->vnum, regen->lMapIndex, regen->sx, regen->sy, regen->ex, regen->ey, true, regen->is_aggressive, regen->is_aggressive );
+
+				// if (ch)
+					// ++regen->count;
+			// }
 		}
 
 		if (ch && !bOnce)
@@ -630,6 +683,8 @@ bool regen_load(const char* filename, long lMapIndex, int base_x, int base_y)
 		if (tmp.type == REGEN_TYPE_MOB ||
 			tmp.type == REGEN_TYPE_GROUP ||
 			tmp.type == REGEN_TYPE_GROUP_GROUP ||
+			tmp.type == REGEN_TYPE_BOSS ||
+			tmp.type == REGEN_TYPE_BOSS_RANDOM ||
 			tmp.type == REGEN_TYPE_ANYWHERE)
 		{
 			if (test_server)
@@ -676,6 +731,17 @@ bool regen_load(const char* filename, long lMapIndex, int base_x, int base_y)
 				{
 					SECTREE_MANAGER::instance().InsertNPCPosition(lMapIndex, p->m_table.bType, p->m_table.szLocaleName, (regen->sx+regen->ex) / 2 - base_x, (regen->sy+regen->ey) / 2 - base_y, regen->vnum);
 				}
+			}
+			
+			if (regen->type == REGEN_TYPE_BOSS)
+			{
+				const CMob * p = CMobManager::instance().Get(regen->vnum);
+
+				if (!p)
+				{
+					sys_err("In %s, No mob data by vnum %u", filename, regen->vnum);
+				}
+				SECTREE_MANAGER::instance().InsertNPCPosition(lMapIndex, CHAR_TYPE_NPC, p->m_table.szLocaleName, (regen->sx+regen->ex) / 2 - base_x, (regen->sy+regen->ey) / 2 - base_y, regen->vnum);
 			}
 
 			//NO_REGEN

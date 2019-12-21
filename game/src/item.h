@@ -131,7 +131,7 @@ class CItem : public CEntity
 		bool		HasRareAttr(BYTE bApply);
 
 		void		SetDestroyEvent(LPEVENT pkEvent);
-		void		StartDestroyEvent(int iSec=300);
+		void		StartDestroyEvent(int iSec=180);
 
 		DWORD		GetRefinedVnum()	{ return m_pProto ? m_pProto->dwRefinedVnum : 0; }
 		DWORD		GetRefineFromVnum();

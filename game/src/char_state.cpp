@@ -754,6 +754,23 @@ void CHARACTER::__StateIdle_NPC()
 			}
 		}
 	}
+	else if (GetRaceNum() >= 20432 && GetRaceNum() <= 20436)
+	{
+		FuncFindGuardVictim f(this, 50000);
+
+		if (GetSectree())
+			GetSectree()->ForEachAround(f);
+
+		LPCHARACTER victim = f.GetVictim();
+
+		if (victim)
+		{
+			m_dwStateDuration = passes_per_sec/2;
+
+			if (CanBeginFight())
+				BeginFight(victim);
+		}
+	}
 	else
 	{
 		if (GetRaceNum() == xmas::MOB_SANTA_VNUM) // ªÍ≈∏

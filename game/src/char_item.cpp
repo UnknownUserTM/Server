@@ -6564,6 +6564,25 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 			// 평범한 아이템이라면
 			else
 			{
+				
+				if(item->GetType() == ITEM_WEAPON && FindAffect(AFFECT_PICKUP_WEAPON_BLOCK))
+					return false;
+				
+				if(item->GetType() == ITEM_ARMOR && item->GetSubType() == ARMOR_BODY && FindAffect(AFFECT_PICKUP_ARMOR_BLOCK))
+					return false;				
+
+				if(item->GetType() == ITEM_ARMOR && item->GetSubType() != ARMOR_BODY && FindAffect(AFFECT_PICKUP_JEWELRY_BLOCK))
+					return false;				
+				
+				if(item->GetType() == ITEM_MATERIAL && FindAffect(AFFECT_PICKUP_MATERIAL_BLOCK))
+					return false;				
+				
+				if(item->GetType() == ITEM_METIN && FindAffect(AFFECT_PICKUP_GHOSTSTONE_BLOCK))
+					return false;				
+
+				if(item->GetType() == ITEM_SKILLBOOK && FindAffect(AFFECT_PICKUP_SKILLBOOK_BLOCK))
+					return false;	
+				
 				if (item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
 				{
 					DWORD bCount = item->GetCount();
