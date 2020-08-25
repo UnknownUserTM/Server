@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #ifdef __AUCTION__
-
+// Hallo???
 #include "DBManager.h"
 #include "Peer.h"
 #include "AuctionManager.h"
