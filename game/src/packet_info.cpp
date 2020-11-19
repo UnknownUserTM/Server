@@ -219,7 +219,8 @@ CPacketInfoCG::CPacketInfoCG()
 
 	Set(HEADER_CG_CLIENT_VERSION, sizeof(TPacketCGClientVersion), "Version", true);
 	Set(HEADER_CG_CLIENT_VERSION2, sizeof(TPacketCGClientVersion2), "Version", true);
-	Set(HEADER_CG_PONG, sizeof(BYTE), "Pong", true);
+//	Set(HEADER_CG_PONG, sizeof(BYTE), "Pong", true);
+	Set(HEADER_CG_PONG, sizeof(BYTE), "Pong", false)
 	Set(HEADER_CG_MALL_CHECKOUT, sizeof(TPacketCGSafeboxCheckout), "MallCheckout", true);
 
 	Set(HEADER_CG_SCRIPT_SELECT_ITEM, sizeof(TPacketCGScriptSelectItem), "ScriptSelectItem", true);
