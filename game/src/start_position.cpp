@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "start_position.h"
-
+//anderung.
 
 char g_nation_name[4][32] =
 {
