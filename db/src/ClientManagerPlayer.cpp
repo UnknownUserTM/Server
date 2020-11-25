@@ -325,9 +325,13 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		else
 		{
 			snprintf(szQuery, sizeof(szQuery),
-					"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,socket3,socket4,socket5,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
+#ifdef ENABLE_SPECIAL_STORAGE
+					"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d or window = %d or window = %d or window = %d)",
+					GetTablePostfix(), pTab->id, SAFEBOX, DRAGON_SOUL_INVENTORY, UPGRADE_INVENTORY, BOOK_INVENTORY, STONE_INVENTORY);
+#else
 					"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
 					GetTablePostfix(), pTab->id, SAFEBOX, DRAGON_SOUL_INVENTORY);
+#endif
 
 			CDBManager::instance().ReturnQuery(szQuery,
 					QID_ITEM,
@@ -383,8 +387,13 @@ void CClientManager::QUERY_PLAYER_LOAD(CPeer * peer, DWORD dwHandle, TPlayerLoad
 		//--------------------------------------------------------------
 		snprintf(queryStr, sizeof(queryStr),
 				"SELECT id,window+0,pos,count,vnum,socket0,socket1,socket2,socket3,socket4,socket5,attrtype0,attrvalue0,attrtype1,attrvalue1,attrtype2,attrvalue2,attrtype3,attrvalue3,attrtype4,attrvalue4,attrtype5,attrvalue5,attrtype6,attrvalue6 "
+#ifdef ENABLE_SPECIAL_STORAGE
+				"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d or window = %d or window = %d or window = %d)",
+				GetTablePostfix(), packet->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY, UPGRADE_INVENTORY, BOOK_INVENTORY, STONE_INVENTORY);
+#else
 				"FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)",
 				GetTablePostfix(), packet->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY);
+#endif
 		CDBManager::instance().ReturnQuery(queryStr, QID_ITEM, peer->GetHandle(), new ClientHandleInfo(dwHandle, packet->player_id));
 
 		//--------------------------------------------------------------
@@ -1153,7 +1162,14 @@ void CClientManager::__RESULT_PLAYER_DELETE(CPeer *peer, SQLMsg* msg)
 		snprintf(queryStr, sizeof(queryStr), "DELETE FROM player%s WHERE id=%d", GetTablePostfix(), pi->player_id);
 		delete CDBManager::instance().DirectQuery(queryStr);
 
+		// snprintf(queryStr, sizeof(queryStr), "DELETE FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)", GetTablePostfix(), pi->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY);
+#ifdef ENABLE_SPECIAL_STORAGE
+		snprintf(queryStr, sizeof(queryStr), "DELETE FROM item%s WHERE owner_id=%d AND (window < %d or window = %d or window = %d or window = %d or window = %d)", 
+		GetTablePostfix(), pi->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY, UPGRADE_INVENTORY, BOOK_INVENTORY, STONE_INVENTORY);
+#else
 		snprintf(queryStr, sizeof(queryStr), "DELETE FROM item%s WHERE owner_id=%d AND (window < %d or window = %d)", GetTablePostfix(), pi->player_id, SAFEBOX, DRAGON_SOUL_INVENTORY);
+#endif
+
 		delete CDBManager::instance().DirectQuery(queryStr);
 
 		snprintf(queryStr, sizeof(queryStr), "DELETE FROM quest%s WHERE dwPID=%d", GetTablePostfix(), pi->player_id);

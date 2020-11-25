@@ -602,7 +602,13 @@ void Cube_show_list (LPCHARACTER ch)
 
 
 // 인벤토리에 있는 아이템을 큐브에 등록
+// before SpecialInventory Nov2020 Extermiantus
+// void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index)
+#ifdef ENABLE_SPECIAL_STORAGE
+void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index, int inven_type)
+#else
 void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index)
+#endif
 {
 	// 아이템이 있는가?
 	// 큐브내의 빈자리 찾기
@@ -612,14 +618,35 @@ void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index)
 	LPITEM	*cube_item;
 
 	RETURN_IF_CUBE_IS_NOT_OPENED(ch);
+	
+	// before SpecialInventory Nov2020 Extermiantus
+	// if (inven_index<0 || INVENTORY_MAX_NUM<=inven_index)
+		// return;
+#ifdef ENABLE_SPECIAL_STORAGE
+	if (inven_index<0)
+		return;
+	
+	if ((inven_type == INVENTORY && INVENTORY_MAX_NUM<=inven_index) || 
+		(inven_type == UPGRADE_INVENTORY && SPECIAL_INVENTORY_MAX_NUM<=inven_index) ||
+		(inven_type == BOOK_INVENTORY && SPECIAL_INVENTORY_MAX_NUM<=inven_index) ||
+		(inven_type == STONE_INVENTORY && SPECIAL_INVENTORY_MAX_NUM<=inven_index))
+		return;
 
+	if (inven_type != INVENTORY && inven_type != UPGRADE_INVENTORY && inven_type != BOOK_INVENTORY && inven_type != STONE_INVENTORY)
+		return;
+#else
 	if (inven_index<0 || INVENTORY_MAX_NUM<=inven_index)
 		return;
+#endif
 	if (cube_index<0 || CUBE_MAX_NUM<=cube_index)
 		return;
 
+	// item = ch->GetInventoryItem(inven_index);
+#ifdef ENABLE_SPECIAL_STORAGE
+	item = ch->GetItem(TItemPos(inven_type, inven_index));
+#else
 	item = ch->GetInventoryItem(inven_index);
-
+#endif
 	if (NULL==item)	return;
 
 	cube_item = ch->GetCubeItem();

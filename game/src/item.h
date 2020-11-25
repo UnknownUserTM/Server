@@ -266,7 +266,11 @@ class CItem : public CEntity
 		bool		IsDragonSoul();
 		int		GiveMoreTime_Per(float fPercent);
 		int		GiveMoreTime_Fix(DWORD dwTime);
-
+#ifdef ENABLE_SPECIAL_STORAGE
+		bool 		IsUpgradeItem();
+		bool 		IsBook();
+		bool 		IsStone();
+#endif
 	private:
 		TItemTable const * m_pProto;		// «¡∑Œ≈‰ ≈∏¿Ÿ
 

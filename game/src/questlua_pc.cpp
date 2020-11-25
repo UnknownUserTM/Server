@@ -21,6 +21,7 @@
 #include "utils.h"
 #include "unique_item.h"
 #include "mob_manager.h"
+#include "../../common/service.h"
 
 #ifdef ENABLE_DICE_SYSTEM
 #include "party.h"
@@ -614,7 +615,30 @@ namespace quest
 			return 1;
 		}
 
+		// bool bEnoughInventoryForItem = ch->GetEmptyInventory(pTable->bSize) != -1;
+#ifdef ENABLE_SPECIAL_STORAGE
+		LPITEM pItem = ITEM_MANAGER::instance().CreateItem(item_vnum);
+
+		bool bEnoughInventoryForItem;
+		if (pItem->IsUpgradeItem())
+		{
+			bEnoughInventoryForItem = ch->GetEmptyUpgradeInventory(pItem) != -1;
+		}
+		else if (pItem->IsBook())
+		{
+			bEnoughInventoryForItem = ch->GetEmptyBookInventory(pItem) != -1;
+		}
+		else if (pItem->IsStone())
+		{
+			bEnoughInventoryForItem = ch->GetEmptyStoneInventory(pItem) != -1;
+		}
+		else
+		{
+			bEnoughInventoryForItem = ch->GetEmptyInventory(pTable->bSize) != -1;
+		}
+#else
 		bool bEnoughInventoryForItem = ch->GetEmptyInventory(pTable->bSize) != -1;
+#endif
 		lua_pushboolean(L, bEnoughInventoryForItem);
 		return 1;
 	}

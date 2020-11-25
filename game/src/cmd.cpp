@@ -5,6 +5,8 @@
 #include "locale_service.h"
 #include "log.h"
 #include "desc.h"
+ACMD(do_sitdown);
+ACMD(do_standup);
 ACMD(do_reset_pickup_filter);
 ACMD(do_change_pickup_filter);
 ACMD(do_timestamp_test);
@@ -613,7 +615,10 @@ struct command_info cmd_info[] =
 	{ "timestamp_test",			do_timestamp_test,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
 	{ "change_pickup_filter",	do_change_pickup_filter,	0,	POS_DEAD,	GM_PLAYER	},
 	{ "reset_pickup_filter",	do_reset_pickup_filter,	0,	POS_DEAD,	GM_PLAYER	},
-		
+	
+	{ "sitdown",	do_sitdown,	0,	POS_DEAD,	GM_PLAYER	},
+	{ "standup",	do_standup,	0,	POS_DEAD,	GM_PLAYER	},
+
 	{ "report",			do_user_bugreport,	0,	POS_DEAD,	GM_PLAYER	},
 	{ "plague",			do_plague,	0,	POS_DEAD,	GM_HIGH_WIZARD	},
 	

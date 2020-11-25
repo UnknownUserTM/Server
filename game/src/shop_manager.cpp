@@ -267,7 +267,12 @@ void CShopManager::Buy(LPCHARACTER ch, BYTE pos)
 	}
 }
 
-void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, DWORD bCount)
+// void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, DWORD bCount)
+#ifdef ENABLE_SPECIAL_STORAGE
+void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount, BYTE bType)
+#else
+void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount)
+#endif
 {
 #ifdef ENABLE_NEWSTUFF
 	if (0 != g_BuySellTimeLimitValue)
@@ -299,8 +304,12 @@ void CShopManager::Sell(LPCHARACTER ch, BYTE bCell, DWORD bCount)
 		return;
 	}
 
+	// LPITEM item = ch->GetInventoryItem(bCell);
+#ifdef ENABLE_SPECIAL_STORAGE
+	LPITEM item = ch->GetItem(TItemPos(bType, bCell));
+#else
 	LPITEM item = ch->GetInventoryItem(bCell);
-
+#endif
 	if (!item)
 		return;
 

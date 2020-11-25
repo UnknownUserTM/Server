@@ -1,5 +1,6 @@
 #ifndef __INC_METIN_II_LENGTH_H__
 #define __INC_METIN_II_LENGTH_H__
+#include "service.h"
 
 #include "CommonDefines.h"
 
@@ -91,7 +92,9 @@ enum EMisc
 	BELT_INVENTORY_SLOT_HEIGHT= 4,
 
 	BELT_INVENTORY_SLOT_COUNT = BELT_INVENTORY_SLOT_WIDTH * BELT_INVENTORY_SLOT_HEIGHT,
-
+#ifdef ENABLE_SPECIAL_STORAGE
+	SPECIAL_INVENTORY_MAX_NUM = 90,
+#endif
 
 /**
 	 **** 현재까지 할당 된 아이템 영역 정리 (DB상 Item Position) ****
@@ -509,10 +512,16 @@ enum EWindows
 	MALL,
 	DRAGON_SOUL_INVENTORY,
 	BELT_INVENTORY,
+
 #ifdef __AUCTION__
 	AUCTION,
 #endif
-	GROUND
+	GROUND,
+#ifdef ENABLE_SPECIAL_STORAGE
+	UPGRADE_INVENTORY,
+	BOOK_INVENTORY,
+	STONE_INVENTORY
+#endif
 };
 
 enum EMobSizes
@@ -796,6 +805,12 @@ typedef struct SItemPos
 		case DRAGON_SOUL_INVENTORY:
 			return cell < (DRAGON_SOUL_INVENTORY_MAX_NUM);
 		// 동적으로 크기가 정해지는 window는 valid 체크를 할 수가 없다.
+#ifdef ENABLE_SPECIAL_STORAGE
+		case UPGRADE_INVENTORY:
+		case BOOK_INVENTORY:
+		case STONE_INVENTORY:
+			return cell < (SPECIAL_INVENTORY_MAX_NUM);
+#endif
 		case SAFEBOX:
 		case MALL:
 			return false;

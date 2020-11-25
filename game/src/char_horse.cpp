@@ -10,6 +10,7 @@
 #include "horsename_manager.h"
 #include "locale_service.h"
 #include "arena.h"
+#include "utils.h"
 
 #include "../../common/VnumHelper.h"
 
@@ -208,12 +209,16 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 		if ( pHorseName != NULL && strlen(pHorseName) != 0 )
 		{
 			m_chHorse->m_stName = pHorseName;
+			ChatPacket(CHAT_TYPE_INFO, "1?");
 		}
 		else
 		{
 			m_chHorse->m_stName = GetName();
 			m_chHorse->m_stName += LC_TEXT("님의 말");
+			ChatPacket(CHAT_TYPE_INFO, "2?");
 		}
+		
+		ChatPacket(CHAT_TYPE_INFO, "Hallo?");
 
 		if (!m_chHorse->Show(GetMapIndex(), x, y, GetZ()))
 		{
@@ -271,17 +276,28 @@ void CHARACTER::HorseSummon(bool bSummon, bool bFromFar, DWORD dwVnum, const cha
 
 DWORD CHARACTER::GetMyHorseVnum() const
 {
-	int delta = 0;
-
-	if (GetGuild())
+	int mountSkinVnum = GetQuestFlag("mount_system.mount_vnum");
+	if (mountSkinVnum != 0)
 	{
-		++delta;
-
-		if (GetGuild()->GetMasterPID() == GetPlayerID())
-			++delta;
+		return mountSkinVnum;
+	} 
+	else
+	{
+		return 20114;
+		
 	}
+	// old
+	// int delta = 0;
+	
+	// if (GetGuild())
+	// {
+		// ++delta;
 
-	return c_aHorseStat[GetHorseLevel()].iNPCRace + delta;
+		// if (GetGuild()->GetMasterPID() == GetPlayerID())
+			// ++delta;
+	// }
+
+	// return c_aHorseStat[GetHorseLevel()].iNPCRace + delta;
 }
 
 void CHARACTER::HorseDie()
@@ -316,7 +332,7 @@ void CHARACTER::ClearHorseInfo()
 
 }
 
-void CHARACTER::SendHorseInfo()
+void CHARACTER::SendHorseInfo(int SendHorseInfo)
 {
 	if (m_chHorse || IsHorseRiding())
 	{
@@ -359,7 +375,13 @@ STM
 				m_bSendHorseStaminaGrade != iStaminaGrade)
 		{
 			ChatPacket(CHAT_TYPE_COMMAND, "horse_state %d %d %d", GetHorseLevel(), iHealthGrade, iStaminaGrade);
-
+			ChatPacket(CHAT_TYPE_INFO, "horse_state %d %d %d", GetHorseLevel(), iHealthGrade, iStaminaGrade);
+			ChatPacket(CHAT_TYPE_INFO, "horse_health %d", GetHorseHealth());
+			ChatPacket(CHAT_TYPE_INFO, "horse_stamina %d", GetHorseStamina());
+			int timePassed = get_global_time() - m_iLastHorseUpdateTime;
+			ChatPacket(CHAT_TYPE_INFO, "horse_time_passed %d", timePassed);
+			ChatPacket(CHAT_TYPE_INFO, "SendHorseInfo %d", SendHorseInfo);
+			m_iLastHorseUpdateTime = get_global_time();
 			// FIX : 클라이언트에 "말 상태 버프" 아이콘을 표시하지 않을 목적으로 함수 초입에 return함으로써 아래 코드를 무시한다면
 			// 말을 무한대로 소환하는 무시무시한 버그가 생김.. 정확한 원인은 파악 안해봐서 모름.
 			m_bSendHorseLevel = GetHorseLevel();

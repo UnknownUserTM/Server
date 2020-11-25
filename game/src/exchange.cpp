@@ -355,7 +355,75 @@ bool CExchange::CheckSpace()
 
 		s_grid4.Put(i - INVENTORY_MAX_NUM / 4, 1, item->GetSize());
 	}
+#ifdef ENABLE_SPECIAL_STORAGE
+	LPITEM item2,item3;
+	static CGrid s_upp_grid1(5, SPECIAL_INVENTORY_MAX_NUM / 5 / 2);
+	static CGrid s_upp_grid2(5, SPECIAL_INVENTORY_MAX_NUM / 5 / 2);
+	static CGrid s_book_grid1(5, SPECIAL_INVENTORY_MAX_NUM / 5 / 2);
+	static CGrid s_book_grid2(5, SPECIAL_INVENTORY_MAX_NUM / 5 / 2);
+	static CGrid s_stone_grid1(5, SPECIAL_INVENTORY_MAX_NUM / 5 / 2);
+	static CGrid s_stone_grid2(5, SPECIAL_INVENTORY_MAX_NUM / 5 / 2);
+	
+	s_upp_grid1.Clear();
+	s_upp_grid2.Clear();
+	s_book_grid1.Clear();
+	s_book_grid2.Clear();
+	s_stone_grid1.Clear();
+	s_stone_grid2.Clear();
 
+	int upgde_cnt = 0;
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if (!(item = victim->GetUpgradeInventoryItem(i)))
+			continue;
+		
+		if (i < SPECIAL_INVENTORY_MAX_NUM / 2)
+		{
+			s_upp_grid1.Put(i, 1, item->GetSize());
+			upgde_cnt++;
+		}
+		else
+		{
+			s_upp_grid2.Put(i, 1, item->GetSize());
+			upgde_cnt++;
+		}
+	}
+	
+	int book_cnt = 0;
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if (!(item = victim->GetBookInventoryItem(i)))
+			continue;
+		
+		if (i < SPECIAL_INVENTORY_MAX_NUM / 2)
+		{
+			s_book_grid1.Put(i, 1, item->GetSize());
+			book_cnt++;
+		}
+		else
+		{
+			s_book_grid2.Put(i, 1, item->GetSize());
+			book_cnt++;
+		}
+	}
+	int stne_cnt = 0;
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if (!(item = victim->GetStoneInventoryItem(i)))
+			continue;
+		
+		if (i < SPECIAL_INVENTORY_MAX_NUM / 2)
+		{
+			s_stone_grid1.Put(i, 1, item->GetSize());
+			stne_cnt++;
+		}
+		else
+		{
+			s_stone_grid2.Put(i, 1, item->GetSize());
+			stne_cnt++;
+		}
+	}
+#endif
 	// 아... 뭔가 개병신 같지만... 용혼석 인벤을 노멀 인벤 보고 따라 만든 내 잘못이다 ㅠㅠ
 	static std::vector <WORD> s_vDSGrid(DRAGON_SOUL_INVENTORY_MAX_NUM);
 
@@ -415,6 +483,72 @@ bool CExchange::CheckSpace()
 			if (!bExistEmptySpace)
 				return false;
 		}
+		
+#ifdef ENABLE_SPECIAL_STORAGE
+		else if(item->IsUpgradeItem())
+		{
+			if (upgde_cnt == 90)
+				return false;
+			
+			int iPos = s_upp_grid1.FindBlank(1, item->GetSize());
+			if (iPos >= 0)
+			{
+				s_upp_grid1.Put(iPos, 1, item->GetSize());
+				continue;
+			}
+
+			iPos = s_upp_grid2.FindBlank(1, item->GetSize());
+			if (iPos >= 0)
+			{
+				s_upp_grid2.Put(iPos, 1, item->GetSize());
+				continue;
+			}
+			
+			return false;
+		}
+		else if(item->IsBook())
+		{
+			if (book_cnt == 90)
+				return false;
+
+			int iPos = s_book_grid1.FindBlank(1, item->GetSize());
+			if (iPos >= 0)
+			{
+				s_book_grid1.Put(iPos, 1, item->GetSize());
+				continue;
+			}
+
+			iPos = s_book_grid2.FindBlank(1, item->GetSize());
+			if (iPos >= 0)
+			{
+				s_book_grid2.Put(iPos, 1, item->GetSize());
+				continue;
+			}
+			
+			return false;
+		}
+		else if(item->IsStone())
+		{
+			if (stne_cnt == 90)
+				return false;
+			
+			int iPos = s_stone_grid1.FindBlank(1, item->GetSize());
+			if (iPos >= 0)
+			{
+				s_stone_grid1.Put(iPos, 1, item->GetSize());
+				continue;
+			}
+
+			iPos = s_stone_grid2.FindBlank(1, item->GetSize());
+			if (iPos >= 0)
+			{
+				s_stone_grid2.Put(iPos, 1, item->GetSize());
+				continue;
+			}
+			
+			return false;
+		}
+#endif		
 		else
 		{
 			int iPos = s_grid1.FindBlank(1, item->GetSize());
@@ -457,6 +591,14 @@ bool CExchange::Done()
 
 		if (item->IsDragonSoul())
 			empty_pos = victim->GetEmptyDragonSoulInventory(item);
+#ifdef ENABLE_SPECIAL_STORAGE
+		else if(item->IsUpgradeItem())
+			empty_pos = victim->GetEmptyUpgradeInventory(item);
+		else if(item->IsBook())
+			empty_pos = victim->GetEmptyBookInventory(item);
+		else if(item->IsStone())
+			empty_pos = victim->GetEmptyStoneInventory(item);
+#endif
 		else
 			empty_pos = victim->GetEmptyInventory(item->GetSize());
 
@@ -480,6 +622,14 @@ bool CExchange::Done()
 		item->RemoveFromCharacter();
 		if (item->IsDragonSoul())
 			item->AddToCharacter(victim, TItemPos(DRAGON_SOUL_INVENTORY, empty_pos));
+#ifdef ENABLE_SPECIAL_STORAGE
+		else if(item->IsUpgradeItem())
+			item->AddToCharacter(victim, TItemPos(UPGRADE_INVENTORY, empty_pos));
+		else if(item->IsBook())
+			item->AddToCharacter(victim, TItemPos(BOOK_INVENTORY, empty_pos));
+		else if(item->IsStone())
+			item->AddToCharacter(victim, TItemPos(STONE_INVENTORY, empty_pos));
+#endif
 		else
 			item->AddToCharacter(victim, TItemPos(INVENTORY, empty_pos));
 		ITEM_MANAGER::instance().FlushDelayedSave(item);

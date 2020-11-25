@@ -112,6 +112,25 @@ static bool IS_MONKEY_DUNGEON(int map_index)
 	return false;
 }
 
+bool IS_INFINITY_BUFF_ITEM(int itemVnum)
+{
+	switch (itemVnum)
+	{
+		case 160480:
+		case 160481:
+		case 160482:
+		case 160483:
+		case 160484:
+		case 160485:
+		case 160486:
+		case 160487:
+
+			return true;;
+	}	
+	
+	return false;
+}
+
 bool IS_SUMMONABLE_ZONE(int map_index)
 {
 	// 몽키던전
@@ -239,6 +258,22 @@ LPITEM CHARACTER::GetInventoryItem(WORD wCell) const
 {
 	return GetItem(TItemPos(INVENTORY, wCell));
 }
+
+#ifdef ENABLE_SPECIAL_STORAGE
+LPITEM CHARACTER::GetUpgradeInventoryItem(WORD wCell) const
+{
+	return GetItem(TItemPos(UPGRADE_INVENTORY, wCell));
+}
+LPITEM CHARACTER::GetBookInventoryItem(WORD wCell) const
+{
+	return GetItem(TItemPos(BOOK_INVENTORY, wCell));
+}
+LPITEM CHARACTER::GetStoneInventoryItem(WORD wCell) const
+{
+	return GetItem(TItemPos(STONE_INVENTORY, wCell));
+}
+#endif
+
 LPITEM CHARACTER::GetItem(TItemPos Cell) const
 {
 	if (!IsValidItemPosition(Cell))
@@ -262,7 +297,29 @@ LPITEM CHARACTER::GetItem(TItemPos Cell) const
 			return NULL;
 		}
 		return m_pointsInstant.pDSItems[wCell];
-
+#ifdef ENABLE_SPECIAL_STORAGE
+	case UPGRADE_INVENTORY:
+		if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+		{
+			sys_err("CHARACTER::GetInventoryItem: invalid SSU item cell %d", wCell);
+			return NULL;
+		}
+		return m_pointsInstant.pSSUItems[wCell];
+	case BOOK_INVENTORY:
+		if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+		{
+			sys_err("CHARACTER::GetInventoryItem: invalid SSB item cell %d", wCell);
+			return NULL;
+		}
+		return m_pointsInstant.pSSBItems[wCell];
+	case STONE_INVENTORY:
+		if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+		{
+			sys_err("CHARACTER::GetInventoryItem: invalid SSS item cell %d", wCell);
+			return NULL;
+		}
+		return m_pointsInstant.pSSSItems[wCell];
+#endif
 	default:
 		return NULL;
 	}
@@ -398,6 +455,168 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 			m_pointsInstant.pDSItems[wCell] = pItem;
 		}
 		break;
+	
+#ifdef ENABLE_SPECIAL_STORAGE	
+	case UPGRADE_INVENTORY:
+		{
+			LPITEM pOld = m_pointsInstant.pSSUItems[wCell];
+
+			if (pOld)
+			{
+				if (wCell < SPECIAL_INVENTORY_MAX_NUM)
+				{
+					for (int i = 0; i < pOld->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							continue;
+
+						if (m_pointsInstant.pSSUItems[p] && m_pointsInstant.pSSUItems[p] != pOld)
+							continue;
+
+						m_pointsInstant.wSSUItemGrid[p] = 0;
+					}
+				}
+				else
+					m_pointsInstant.wSSUItemGrid[wCell] = 0;
+			}
+
+			if (pItem)
+			{
+				if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+				{
+					sys_err("CHARACTER::SetItem: invalid SSU item cell %d", wCell);
+					return;
+				}
+
+				if (wCell < SPECIAL_INVENTORY_MAX_NUM)
+				{
+					for (int i = 0; i < pItem->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							continue;
+
+						m_pointsInstant.wSSUItemGrid[p] = wCell + 1;
+					}
+				}
+				else
+					m_pointsInstant.wSSUItemGrid[wCell] = wCell + 1;
+			}
+
+			m_pointsInstant.pSSUItems[wCell] = pItem;
+		}
+		break;
+	case BOOK_INVENTORY:
+		{
+			LPITEM pOld = m_pointsInstant.pSSBItems[wCell];
+
+			if (pOld)
+			{
+				if (wCell < SPECIAL_INVENTORY_MAX_NUM)
+				{
+					for (int i = 0; i < pOld->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							continue;
+
+						if (m_pointsInstant.pSSBItems[p] && m_pointsInstant.pSSBItems[p] != pOld)
+							continue;
+
+						m_pointsInstant.wSSBItemGrid[p] = 0;
+					}
+				}
+				else
+					m_pointsInstant.wSSBItemGrid[wCell] = 0;
+			}
+
+			if (pItem)
+			{
+				if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+				{
+					sys_err("CHARACTER::SetItem: invalid SSB item cell %d", wCell);
+					return;
+				}
+
+				if (wCell < SPECIAL_INVENTORY_MAX_NUM)
+				{
+					for (int i = 0; i < pItem->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							continue;
+
+						m_pointsInstant.wSSBItemGrid[p] = wCell + 1;
+					}
+				}
+				else
+					m_pointsInstant.wSSBItemGrid[wCell] = wCell + 1;
+			}
+
+			m_pointsInstant.pSSBItems[wCell] = pItem;
+		}
+		break;
+	case STONE_INVENTORY:
+		{
+			LPITEM pOld = m_pointsInstant.pSSSItems[wCell];
+
+			if (pOld)
+			{
+				if (wCell < SPECIAL_INVENTORY_MAX_NUM)
+				{
+					for (int i = 0; i < pOld->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							continue;
+
+						if (m_pointsInstant.pSSSItems[p] && m_pointsInstant.pSSSItems[p] != pOld)
+							continue;
+
+						m_pointsInstant.wSSSItemGrid[p] = 0;
+					}
+				}
+				else
+					m_pointsInstant.wSSSItemGrid[wCell] = 0;
+			}
+
+			if (pItem)
+			{
+				if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+				{
+					sys_err("CHARACTER::SetItem: invalid SSB item cell %d", wCell);
+					return;
+				}
+
+				if (wCell < SPECIAL_INVENTORY_MAX_NUM)
+				{
+					for (int i = 0; i < pItem->GetSize(); ++i)
+					{
+						int p = wCell + (i * 5);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							continue;
+
+						m_pointsInstant.wSSSItemGrid[p] = wCell + 1;
+					}
+				}
+				else
+					m_pointsInstant.wSSSItemGrid[wCell] = wCell + 1;
+			}
+
+			m_pointsInstant.pSSSItems[wCell] = pItem;
+		}
+		break;
+#endif
+	
+	
+	
 	default:
 		sys_err ("Invalid Inventory type %d", window_type);
 		return;
@@ -452,6 +671,17 @@ void CHARACTER::SetItem(TItemPos Cell, LPITEM pItem, bool bWereMine)
 		case DRAGON_SOUL_INVENTORY:
 			pItem->SetWindow(DRAGON_SOUL_INVENTORY);
 			break;
+#ifdef ENABLE_SPECIAL_STORAGE
+		case UPGRADE_INVENTORY:
+			pItem->SetWindow(UPGRADE_INVENTORY);
+			break;
+		case BOOK_INVENTORY:
+			pItem->SetWindow(BOOK_INVENTORY);
+			break;
+		case STONE_INVENTORY:
+			pItem->SetWindow(STONE_INVENTORY);
+			break;
+#endif
 		}
 	}
 }
@@ -519,6 +749,41 @@ void CHARACTER::ClearItem()
 			M2_DESTROY_ITEM(item);
 		}
 	}
+#ifdef ENABLE_SPECIAL_STORAGE
+	for (i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if ((item = GetItem(TItemPos(UPGRADE_INVENTORY, i))))
+		{
+			item->SetSkipSave(true);
+			ITEM_MANAGER::instance().FlushDelayedSave(item);
+
+			item->RemoveFromCharacter();
+			M2_DESTROY_ITEM(item);
+		}
+	}
+	for (i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if ((item = GetItem(TItemPos(BOOK_INVENTORY, i))))
+		{
+			item->SetSkipSave(true);
+			ITEM_MANAGER::instance().FlushDelayedSave(item);
+
+			item->RemoveFromCharacter();
+			M2_DESTROY_ITEM(item);
+		}
+	}
+	for (i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if ((item = GetItem(TItemPos(STONE_INVENTORY, i))))
+		{
+			item->SetSkipSave(true);
+			ITEM_MANAGER::instance().FlushDelayedSave(item);
+
+			item->RemoveFromCharacter();
+			M2_DESTROY_ITEM(item);
+		}
+	}
+#endif
 }
 
 bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) const
@@ -679,6 +944,185 @@ bool CHARACTER::IsEmptyItemGrid(TItemPos Cell, BYTE bSize, int iExceptionCell) c
 				return true;
 			}
 		}
+#ifdef ENABLE_SPECIAL_STORAGE
+		break;
+	case UPGRADE_INVENTORY:
+		{
+			WORD wCell = Cell.cell;
+			if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+				return false;
+
+			iExceptionCell++;
+
+			if (m_pointsInstant.wSSUItemGrid[wCell])
+			{
+				if (m_pointsInstant.wSSUItemGrid[wCell] == iExceptionCell)
+				{
+					if (bSize == 1)
+						return true;
+
+					int j = 1;
+
+					do
+					{
+						int p = wCell + (5 * j);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							return false;
+
+						if (m_pointsInstant.wSSUItemGrid[p])
+							if (m_pointsInstant.wSSUItemGrid[p] != iExceptionCell)
+								return false;
+					}
+					while (++j < bSize);
+
+					return true;
+				}
+				else
+					return false;
+			}
+
+			if (1 == bSize)
+				return true;
+			else
+			{
+				int j = 1;
+
+				do
+				{
+					int p = wCell + (5 * j);
+
+					if (p >= SPECIAL_INVENTORY_MAX_NUM)
+						return false;
+
+					if (m_pointsInstant.bItemGrid[p]) // old bItemGrid
+						if (m_pointsInstant.wSSUItemGrid[p] != iExceptionCell)
+							return false;
+				}
+				while (++j < bSize);
+
+				return true;
+			}
+		}
+		break;
+	case BOOK_INVENTORY:
+		{
+			WORD wCell = Cell.cell;
+			if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+				return false;
+
+			iExceptionCell++;
+
+			if (m_pointsInstant.wSSBItemGrid[wCell])
+			{
+				if (m_pointsInstant.wSSBItemGrid[wCell] == iExceptionCell)
+				{
+					if (bSize == 1)
+						return true;
+
+					int j = 1;
+
+					do
+					{
+						int p = wCell + (5 * j);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							return false;
+
+						if (m_pointsInstant.wSSBItemGrid[p])
+							if (m_pointsInstant.wSSBItemGrid[p] != iExceptionCell)
+								return false;
+					}
+					while (++j < bSize);
+
+					return true;
+				}
+				else
+					return false;
+			}
+
+			if (1 == bSize)
+				return true;
+			else
+			{
+				int j = 1;
+
+				do
+				{
+					int p = wCell + (5 * j);
+
+					if (p >= SPECIAL_INVENTORY_MAX_NUM)
+						return false;
+
+					if (m_pointsInstant.bItemGrid[p]) // old bItemGrid
+						if (m_pointsInstant.wSSBItemGrid[p] != iExceptionCell)
+							return false;
+				}
+				while (++j < bSize);
+
+				return true;
+			}
+		}
+	case STONE_INVENTORY:
+		{
+			WORD wCell = Cell.cell;
+			if (wCell >= SPECIAL_INVENTORY_MAX_NUM)
+				return false;
+
+			iExceptionCell++;
+
+			if (m_pointsInstant.wSSSItemGrid[wCell])
+			{
+				if (m_pointsInstant.wSSSItemGrid[wCell] == iExceptionCell)
+				{
+					if (bSize == 1)
+						return true;
+
+					int j = 1;
+
+					do
+					{
+						int p = wCell + (5 * j);
+
+						if (p >= SPECIAL_INVENTORY_MAX_NUM)
+							return false;
+
+						if (m_pointsInstant.wSSSItemGrid[p])
+							if (m_pointsInstant.wSSSItemGrid[p] != iExceptionCell)
+								return false;
+					}
+					while (++j < bSize);
+
+					return true;
+				}
+				else
+					return false;
+			}
+
+			if (1 == bSize)
+				return true;
+			else
+			{
+				int j = 1;
+
+				do
+				{
+					int p = wCell + (5 * j);
+
+					if (p >= SPECIAL_INVENTORY_MAX_NUM)
+						return false;
+
+					if (m_pointsInstant.bItemGrid[p]) // old bItemGrid
+						if (m_pointsInstant.wSSSItemGrid[p] != iExceptionCell)
+							return false;
+				}
+				while (++j < bSize);
+
+				return true;
+			}
+		}
+#endif
+
 	}
 	return false;
 }
@@ -720,6 +1164,82 @@ void CHARACTER::CopyDragonSoulItemGrid(std::vector<WORD>& vDragonSoulItemGrid) c
 
 	std::copy(m_pointsInstant.wDSItemGrid, m_pointsInstant.wDSItemGrid + DRAGON_SOUL_INVENTORY_MAX_NUM, vDragonSoulItemGrid.begin());
 }
+
+#ifdef ENABLE_SPECIAL_STORAGE
+int CHARACTER::GetSameUpgradeInventory(LPITEM pItem) const
+{
+	if (NULL == pItem || !pItem->IsUpgradeItem())
+		return -1;
+
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+		if (GetUpgradeInventoryItem(i)->GetVnum() == pItem->GetVnum())
+			return i;
+
+	return -1;
+}
+int CHARACTER::GetSameBookInventory(LPITEM pItem) const
+{
+	if (NULL == pItem || !pItem->IsBook())
+		return -1;
+
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+		if (GetBookInventoryItem(i)->GetVnum() == pItem->GetVnum() && GetBookInventoryItem(i)->GetSocket(0) == pItem->GetSocket(0))
+			return i;
+
+	return -1;
+}
+int CHARACTER::GetSameStoneInventory(LPITEM pItem) const
+{
+	if (NULL == pItem || !pItem->IsStone())
+		return -1;
+
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+		if (GetStoneInventoryItem(i)->GetVnum() == pItem->GetVnum())
+			return i;
+
+	return -1;
+}
+int CHARACTER::GetEmptyUpgradeInventory(LPITEM pItem) const
+{
+	if (NULL == pItem || !pItem->IsUpgradeItem())
+		return -1;
+	
+	BYTE bSize = pItem->GetSize();
+	
+	for ( int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+		if (IsEmptyItemGrid(TItemPos (UPGRADE_INVENTORY, i), bSize))
+			return i;
+		
+	return -1;
+}
+int CHARACTER::GetEmptyBookInventory(LPITEM pItem) const
+{
+	if (NULL == pItem || !pItem->IsBook())
+		return -1;
+	
+	BYTE bSize = pItem->GetSize();
+	
+	for ( int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+		if (IsEmptyItemGrid(TItemPos (BOOK_INVENTORY, i), bSize))
+			return i;
+		
+	return -1;
+}
+int CHARACTER::GetEmptyStoneInventory(LPITEM pItem) const
+{
+	if (NULL == pItem || !pItem->IsStone())
+		return -1;
+	
+	BYTE bSize = pItem->GetSize();
+	
+	for ( int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+		if (IsEmptyItemGrid(TItemPos (STONE_INVENTORY, i), bSize))
+			return i;
+		
+	return -1;
+}
+#endif
+
 
 int CHARACTER::CountEmptyInventory() const
 {
@@ -1923,6 +2443,23 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 		if (false == item->IsEquipped())
 			item->SetSocket(1, item->GetSocket(1) + 1);
 	}
+	
+	
+	
+	if(IS_INFINITY_BUFF_ITEM(item->GetVnum()))
+	{
+		ChatPacket(CHAT_TYPE_INFO, "INFINITY_BUFF: %d", AFFECT_INFINITY_ITEM_WHITE_DEW);
+		
+		// if (FindAffect(item->GetValue()))
+		// {
+			
+			// ChatPacket(CHAT_TYPE_INFO, "Der Effekt wirkt bereits!");
+			// return;
+		// }
+		
+	}
+	
+	
 	// // Bonus transfer
 	// if (item->GetVnum() == 91001) 
 	// {
@@ -6348,7 +6885,16 @@ bool CHARACTER::MoveItem(TItemPos Cell, TItemPos DestCell, DWORD count)
 		// 용혼석이 아닌 아이템은 용혼석 인벤에 들어갈 수 없다.
 		else if (DRAGON_SOUL_INVENTORY == DestCell.window_type)
 			return false;
-
+#ifdef ENABLE_SPECIAL_STORAGE
+		if (!item->IsUpgradeItem() && UPGRADE_INVENTORY == DestCell.window_type)
+			return false;
+		
+		if (!item->IsBook() && BOOK_INVENTORY == DestCell.window_type)
+			return false;
+		
+		if (!item->IsStone() && STONE_INVENTORY == DestCell.window_type)
+			return false;
+#endif
 		LPITEM item2;
 		
 		//if ((item2 = GetItem(DestCell))) {
@@ -6623,7 +7169,107 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 					item->SetCount(bCount);
 				}
+#ifdef ENABLE_SPECIAL_STORAGE
+				if (item->IsUpgradeItem() && item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
+				{
+					BYTE bCount = item->GetCount();
 
+					for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+					{
+						LPITEM item2 = GetUpgradeInventoryItem(i);
+
+						if (!item2)
+							continue;
+
+						if (item2->GetVnum() == item->GetVnum())
+						{
+
+							BYTE bCount2 = MIN(g_bItemCountLimit - item2->GetCount(), bCount);
+							bCount -= bCount2;
+
+							item2->SetCount(item2->GetCount() + bCount2);
+
+							if (bCount == 0)
+							{
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item2->GetName());
+								M2_DESTROY_ITEM(item);
+								return true;
+							}
+						}
+					}
+
+					item->SetCount(bCount);
+				}
+				else if (item->IsBook() && item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
+				{
+					BYTE bCount = item->GetCount();
+
+					for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+					{
+						LPITEM item2 = GetBookInventoryItem(i);
+
+						if (!item2)
+							continue;
+
+						if (item2->GetVnum() == item->GetVnum())
+						{
+							//SKILL BOOK FIX: ITEM_STACKABLE
+							int j;
+
+							for (j = 0; j < ITEM_SOCKET_MAX_NUM; ++j)
+								if (item2->GetSocket(j) != item->GetSocket(j))
+									break;
+
+							if (j != ITEM_SOCKET_MAX_NUM)
+								continue;
+							/////////////////////////////////
+							BYTE bCount2 = MIN(g_bItemCountLimit - item2->GetCount(), bCount);
+							bCount -= bCount2;
+
+							item2->SetCount(item2->GetCount() + bCount2);
+
+							if (bCount == 0)
+							{
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item2->GetName());
+								M2_DESTROY_ITEM(item);
+								return true;
+							}
+						}
+					}
+
+					item->SetCount(bCount);
+				}
+				else if (item->IsStone() && item->IsStackable() && !IS_SET(item->GetAntiFlag(), ITEM_ANTIFLAG_STACK))
+				{
+					BYTE bCount = item->GetCount();
+
+					for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+					{
+						LPITEM item2 = GetStoneInventoryItem(i);
+
+						if (!item2)
+							continue;
+
+						if (item2->GetVnum() == item->GetVnum())
+						{
+
+							BYTE bCount2 = MIN(g_bItemCountLimit - item2->GetCount(), bCount);
+							bCount -= bCount2;
+
+							item2->SetCount(item2->GetCount() + bCount2);
+
+							if (bCount == 0)
+							{
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT("아이템 획득: %s"), item2->GetName());
+								M2_DESTROY_ITEM(item);
+								return true;
+							}
+						}
+					}
+
+					item->SetCount(bCount);
+				}
+#endif
 				int iEmptyCell;
 				if (item->IsDragonSoul())
 				{
@@ -6634,6 +7280,35 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 						return false;
 					}
 				}
+#ifdef ENABLE_SPECIAL_STORAGE
+				else if (item->IsUpgradeItem())
+				{
+					if ((iEmptyCell = GetEmptyUpgradeInventory(item)) == -1)
+					{
+						sys_log(0, "No empty ssu inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+				else if (item->IsBook())
+				{
+					if ((iEmptyCell = GetEmptyBookInventory(item)) == -1)
+					{
+						sys_log(0, "No empty ssu inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+				else if (item->IsStone())
+				{
+					if ((iEmptyCell = GetEmptyStoneInventory(item)) == -1)
+					{
+						sys_log(0, "No empty ssu inventory pid %u size %ud itemid %u", GetPlayerID(), item->GetSize(), item->GetID());
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+#endif
 				else
 				{
 					if ((iEmptyCell = GetEmptyInventory(item->GetSize())) == -1)
@@ -6648,6 +7323,15 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 				if (item->IsDragonSoul())
 					item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
+#ifdef ENABLE_SPECIAL_STORAGE
+				else if (item->IsUpgradeItem())
+					item->AddToCharacter(this, TItemPos(UPGRADE_INVENTORY, iEmptyCell));
+				else if (item->IsBook())
+					item->AddToCharacter(this, TItemPos(BOOK_INVENTORY, iEmptyCell));
+				else if (item->IsStone())
+					item->AddToCharacter(this, TItemPos(STONE_INVENTORY, iEmptyCell));
+#endif
+				
 				else
 					item->AddToCharacter(this, TItemPos(INVENTORY, iEmptyCell));
 
@@ -6736,6 +7420,47 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 					}
 				}
 			}
+#ifdef ENABLE_SPECIAL_STORAGE
+			else if (item->IsUpgradeItem())
+			{
+				if (!(owner && (iEmptyCell = owner->GetEmptyUpgradeInventory(item)) != -1))
+				{
+					owner = this;
+
+					if ((iEmptyCell = GetEmptyUpgradeInventory(item)) == -1)
+					{
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+			}
+			else if (item->IsBook())
+			{
+				if (!(owner && (iEmptyCell = owner->GetEmptyBookInventory(item)) != -1))
+				{
+					owner = this;
+
+					if ((iEmptyCell = GetEmptyBookInventory(item)) == -1)
+					{
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+			}
+			else if (item->IsStone())
+			{
+				if (!(owner && (iEmptyCell = owner->GetEmptyStoneInventory(item)) != -1))
+				{
+					owner = this;
+
+					if ((iEmptyCell = GetEmptyStoneInventory(item)) == -1)
+					{
+						owner->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("소지하고 있는 아이템이 너무 많습니다."));
+						return false;
+					}
+				}
+			}
+#endif
 			else
 			{
 				if (!(owner && (iEmptyCell = owner->GetEmptyInventory(item->GetSize())) != -1))
@@ -6754,6 +7479,14 @@ bool CHARACTER::PickupItem(DWORD dwVID)
 
 			if (item->IsDragonSoul())
 				item->AddToCharacter(owner, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
+#ifdef ENABLE_SPECIAL_STORAGE
+			else if (item->IsUpgradeItem())
+				item->AddToCharacter(owner, TItemPos(UPGRADE_INVENTORY, iEmptyCell));
+			else if (item->IsBook())
+				item->AddToCharacter(owner, TItemPos(BOOK_INVENTORY, iEmptyCell));
+			else if (item->IsStone())
+				item->AddToCharacter(owner, TItemPos(STONE_INVENTORY, iEmptyCell));
+#endif
 			else
 				item->AddToCharacter(owner, TItemPos(INVENTORY, iEmptyCell));
 
@@ -7190,9 +7923,70 @@ int CHARACTER::CountSpecifyItem(DWORD vnum) const
 			}
 		}
 	}
+	
+#ifdef ENABLE_SPECIAL_STORAGE
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		item = GetUpgradeInventoryItem(i);
+		if (NULL != item && item->GetVnum() == vnum)
+		{
+			if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
+				continue;
+			else
+				count += item->GetCount();
+		}
+	}
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		item = GetBookInventoryItem(i);
+		if (NULL != item && item->GetVnum() == vnum)
+		{
+			if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
+				continue;
+			else
+				count += item->GetCount();
+		}
+	}
+	for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		item = GetStoneInventoryItem(i);
+		if (NULL != item && item->GetVnum() == vnum)
+		{
+			if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
+				continue;
+			else
+				count += item->GetCount();
+		}
+	}
+#endif
 
 	return count;
 }
+// Old before Special Inventory Nov.2020 - Exterminatus.
+// int CHARACTER::CountSpecifyItem(DWORD vnum) const
+// {
+	// int	count = 0;
+	// LPITEM item;
+
+	// for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
+	// {
+		// item = GetInventoryItem(i);
+		// if (NULL != item && item->GetVnum() == vnum)
+		// {
+			// // 개인 상점에 등록된 물건이면 넘어간다.
+			// if (m_pkMyShop && m_pkMyShop->IsSellingItem(item->GetID()))
+			// {
+				// continue;
+			// }
+			// else
+			// {
+				// count += item->GetCount();
+			// }
+		// }
+	// }
+
+	// return count;
+// }
 
 // Pruft ob die ItemVnum ein Item aus dem UppStorage ist.
 bool CHARACTER::ItemIsUppStorageItem(DWORD vnum)
@@ -7619,7 +8413,95 @@ void CHARACTER::RemoveSpecifyItem(DWORD vnum, DWORD count)
 			return;
 		}
 	}
+#ifdef ENABLE_SPECIAL_STORAGE
+	for (UINT i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if (NULL == GetUpgradeInventoryItem(i))
+			continue;
 
+		if (GetUpgradeInventoryItem(i)->GetVnum() != vnum)
+			continue;
+
+		if(m_pkMyShop)
+		{
+			bool isItemSelling = m_pkMyShop->IsSellingItem(GetUpgradeInventoryItem(i)->GetID());
+			if (isItemSelling)
+				continue;
+		}
+
+		if (count >= GetUpgradeInventoryItem(i)->GetCount())
+		{
+			count -= GetUpgradeInventoryItem(i)->GetCount();
+			GetUpgradeInventoryItem(i)->SetCount(0);
+
+			if (0 == count)
+				return;
+		}
+		else
+		{
+			GetUpgradeInventoryItem(i)->SetCount(GetUpgradeInventoryItem(i)->GetCount() - count);
+			return;
+		}
+	}
+	for (UINT i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if (NULL == GetBookInventoryItem(i))
+			continue;
+
+		if (GetBookInventoryItem(i)->GetVnum() != vnum)
+			continue;
+
+		if(m_pkMyShop)
+		{
+			bool isItemSelling = m_pkMyShop->IsSellingItem(GetBookInventoryItem(i)->GetID());
+			if (isItemSelling)
+				continue;
+		}
+
+		if (count >= GetBookInventoryItem(i)->GetCount())
+		{
+			count -= GetBookInventoryItem(i)->GetCount();
+			GetBookInventoryItem(i)->SetCount(0);
+
+			if (0 == count)
+				return;
+		}
+		else
+		{
+			GetBookInventoryItem(i)->SetCount(GetBookInventoryItem(i)->GetCount() - count);
+			return;
+		}
+	}
+	for (UINT i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if (NULL == GetStoneInventoryItem(i))
+			continue;
+
+		if (GetStoneInventoryItem(i)->GetVnum() != vnum)
+			continue;
+
+		if(m_pkMyShop)
+		{
+			bool isItemSelling = m_pkMyShop->IsSellingItem(GetStoneInventoryItem(i)->GetID());
+			if (isItemSelling)
+				continue;
+		}
+
+		if (count >= GetStoneInventoryItem(i)->GetCount())
+		{
+			count -= GetStoneInventoryItem(i)->GetCount();
+			GetStoneInventoryItem(i)->SetCount(0);
+
+			if (0 == count)
+				return;
+		}
+		else
+		{
+			GetStoneInventoryItem(i)->SetCount(GetStoneInventoryItem(i)->GetCount() - count);
+			return;
+		}
+	}
+#endif
 	// 예외처리가 약하다.
 	if (count)
 		sys_log(0, "CHARACTER::RemoveSpecifyItem cannot remove enough item vnum %u, still remain %d", vnum, count);
@@ -7696,6 +8578,20 @@ void CHARACTER::AutoGiveItem(LPITEM item, bool longOwnerShip)
 	{
 		cell = GetEmptyDragonSoulInventory(item);
 	}
+#ifdef ENABLE_SPECIAL_STORAGE
+	else if (item->IsUpgradeItem())
+	{
+		cell = GetEmptyUpgradeInventory(item);
+	}
+	else if (item->IsBook())
+	{
+		cell = GetEmptyBookInventory(item);
+	}
+	else if (item->IsStone())
+	{
+		cell = GetEmptyStoneInventory(item);
+	}
+#endif
 	else
 	{
 		cell = GetEmptyInventory (item->GetSize());
@@ -7705,6 +8601,14 @@ void CHARACTER::AutoGiveItem(LPITEM item, bool longOwnerShip)
 	{
 		if (item->IsDragonSoul())
 			item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, cell));
+#ifdef ENABLE_SPECIAL_STORAGE
+		else if (item->IsUpgradeItem())
+			item->AddToCharacter(this, TItemPos(UPGRADE_INVENTORY, cell));
+		else if (item->IsBook())
+			item->AddToCharacter(this, TItemPos(BOOK_INVENTORY, cell));
+		else if (item->IsStone())
+			item->AddToCharacter(this, TItemPos(STONE_INVENTORY, cell));
+#endif
 		else
 			item->AddToCharacter(this, TItemPos(INVENTORY, cell));
 
@@ -7751,35 +8655,109 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, DWORD bCount, int iRarePct, boo
 
 	if (p->dwFlags & ITEM_FLAG_STACKABLE && p->bType != ITEM_BLEND)
 	{
-		for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
+#ifdef ENABLE_SPECIAL_STORAGE
+		if (p->bType == ITEM_MATERIAL && p->bSubType == MATERIAL_LEATHER) //upgrade item
 		{
-			LPITEM item = GetInventoryItem(i);
-
-			if (!item)
-				continue;
-
-			if (item->GetVnum() == dwItemVnum && FN_check_item_socket(item))
+			for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
 			{
-				if (IS_SET(p->dwFlags, ITEM_FLAG_MAKECOUNT))
+				LPITEM item = GetUpgradeInventoryItem(i);
+				
+				if (!item)
+					continue;
+				
+				if (item->GetVnum() == dwItemVnum && FN_check_item_socket(item))
 				{
-					if (bCount < p->alValues[1])
-						bCount = p->alValues[1];
-				}
+					if (IS_SET(p->dwFlags, ITEM_FLAG_MAKECOUNT))
+					{
+						if (bCount < p->alValues[1])
+							bCount = p->alValues[1];
+					}
 
-				BYTE bCount2 = MIN(g_bItemCountLimit - item->GetCount(), bCount);
-				bCount -= bCount2;
+					BYTE bCount2 = MIN(ITEM_MAX_COUNT - item->GetCount(), bCount);
+					bCount -= bCount2;
 
-				item->SetCount(item->GetCount() + bCount2);
+					item->SetCount(item->GetCount() + bCount2);
 
-				if (bCount == 0)
-				{
-					// if (bMsg)
-						// PacketNotifyPickup(LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "COLLECT_ITEM_FROM_GROUND_OWNER"), item->GetVnum());
+					if (bCount == 0)
+					{
+						if (bMsg)
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("?????? ??μ?: %s"), item->GetName());
 
-					return item;
+						return item;
+					}
 				}
 			}
 		}
+		else if (dwItemVnum == 50300) //book item
+		{
+		}
+		else if (p->bType == ITEM_METIN && p->bSubType == METIN_NORMAL) //stone item
+		{
+			for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+			{
+				LPITEM item = GetStoneInventoryItem(i);
+				
+				if (!item)
+					continue;
+				
+				if (item->GetVnum() == dwItemVnum && FN_check_item_socket(item))
+				{
+					if (IS_SET(p->dwFlags, ITEM_FLAG_MAKECOUNT))
+					{
+						if (bCount < p->alValues[1])
+							bCount = p->alValues[1];
+					}
+
+					BYTE bCount2 = MIN(ITEM_MAX_COUNT - item->GetCount(), bCount);
+					bCount -= bCount2;
+
+					item->SetCount(item->GetCount() + bCount2);
+
+					if (bCount == 0)
+					{
+						if (bMsg)
+							ChatPacket(CHAT_TYPE_INFO, LC_TEXT("?????? ??μ?: %s"), item->GetName());
+
+						return item;
+					}
+				}
+			}
+		}
+		else
+		{
+#endif
+			for (int i = 0; i < INVENTORY_MAX_NUM; ++i)
+			{
+				LPITEM item = GetInventoryItem(i);
+
+				if (!item)
+					continue;
+
+				if (item->GetVnum() == dwItemVnum && FN_check_item_socket(item))
+				{
+					if (IS_SET(p->dwFlags, ITEM_FLAG_MAKECOUNT))
+					{
+						if (bCount < p->alValues[1])
+							bCount = p->alValues[1];
+					}
+
+					BYTE bCount2 = MIN(g_bItemCountLimit - item->GetCount(), bCount);
+					bCount -= bCount2;
+
+					item->SetCount(item->GetCount() + bCount2);
+
+					if (bCount == 0)
+					{
+						// if (bMsg)
+							// PacketNotifyPickup(LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "COLLECT_ITEM_FROM_GROUND_OWNER"), item->GetVnum());
+
+						return item;
+					}
+				}
+			}
+#ifdef ENABLE_SPECIAL_STORAGE
+		}
+#endif			
 	}
 
 	LPITEM item = ITEM_MANAGER::instance().CreateItem(dwItemVnum, bCount, 0, true);
@@ -7789,7 +8767,41 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, DWORD bCount, int iRarePct, boo
 		sys_err("cannot create item by vnum %u (name: %s)", dwItemVnum, GetName());
 		return NULL;
 	}
+#ifdef ENABLE_SPECIAL_STORAGE
+	if (dwItemVnum == 50300)
+	{
+		for (int i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+		{
+			LPITEM book = GetBookInventoryItem(i);
+			
+			if (!book)
+				continue;
+			
+			if (book->GetVnum() == dwItemVnum && book->GetSocket(0) == item->GetSocket(0))
+			{
+				if (IS_SET(p->dwFlags, ITEM_FLAG_MAKECOUNT))
+				{
+					if (bCount < p->alValues[1])
+						bCount = p->alValues[1];
+				}
 
+				BYTE bCount2 = MIN(ITEM_MAX_COUNT - book->GetCount(), bCount);
+				bCount -= bCount2;
+
+				book->SetCount(book->GetCount() + bCount2);
+
+				if (bCount == 0)
+				{
+					if (bMsg)
+						ChatPacket(CHAT_TYPE_INFO, LC_TEXT("?????? ??μ?: %s"), book->GetName());
+
+					M2_DESTROY_ITEM(item);
+					return book;
+				}
+			}
+		}
+	}
+#endif
 	if (item->GetType() == ITEM_BLEND)
 	{
 		for (int i=0; i < INVENTORY_MAX_NUM; i++)
@@ -7827,6 +8839,20 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, DWORD bCount, int iRarePct, boo
 		{
 			iEmptyCell = GetEmptyDragonSoulInventory(item);
 		}
+#ifdef ENABLE_SPECIAL_STORAGE
+		else if (item->IsUpgradeItem())
+		{
+			iEmptyCell = GetEmptyUpgradeInventory(item);
+		}
+		else if (item->IsBook())
+		{
+			iEmptyCell = GetEmptyBookInventory(item);
+		}
+		else if (item->IsStone())
+		{
+			iEmptyCell = GetEmptyStoneInventory(item);
+		}
+#endif		
 		else
 			iEmptyCell = GetEmptyInventory(item->GetSize());
 
@@ -7837,6 +8863,21 @@ LPITEM CHARACTER::AutoGiveItem(DWORD dwItemVnum, DWORD bCount, int iRarePct, boo
 
 			if (item->IsDragonSoul())
 				item->AddToCharacter(this, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyCell));
+			
+#ifdef ENABLE_SPECIAL_STORAGE
+			else if (item->IsUpgradeItem())
+			{
+				item->AddToCharacter(this, TItemPos(UPGRADE_INVENTORY, iEmptyCell));
+			}
+			else if (item->IsBook())
+			{
+				item->AddToCharacter(this, TItemPos(BOOK_INVENTORY, iEmptyCell));
+			}
+			else if (item->IsStone())
+			{
+				item->AddToCharacter(this, TItemPos(STONE_INVENTORY, iEmptyCell));
+			}
+#endif
 			else
 				item->AddToCharacter(this, TItemPos(INVENTORY, iEmptyCell));
 			LogManager::instance().ItemLog(this, item, "SYSTEM", item->GetName());
@@ -8642,7 +9683,12 @@ bool CHARACTER::IsValidItemPosition(TItemPos Pos) const
 
 	case DRAGON_SOUL_INVENTORY:
 		return cell < (DRAGON_SOUL_INVENTORY_MAX_NUM);
-
+#ifdef ENABLE_SPECIAL_STORAGE
+	case UPGRADE_INVENTORY:
+	case BOOK_INVENTORY:
+	case STONE_INVENTORY:
+		return cell < (SPECIAL_INVENTORY_MAX_NUM);
+#endif
 	case SAFEBOX:
 		if (NULL != m_pkSafebox)
 			return m_pkSafebox->IsValidPosition(cell);

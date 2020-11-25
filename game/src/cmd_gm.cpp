@@ -559,6 +559,53 @@ ACMD(do_item)
 					ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
 			}
 		}
+#ifdef ENABLE_SPECIAL_STORAGE
+		else if (item->IsUpgradeItem())
+		{
+			int iEmptyPos = ch->GetEmptyUpgradeInventory(item);
+
+			if (iEmptyPos != -1)
+			{
+				item->AddToCharacter(ch, TItemPos(UPGRADE_INVENTORY, iEmptyPos));
+				LogManager::instance().ItemLog(ch, item, "GM", item->GetName());
+			}
+			else
+			{
+				M2_DESTROY_ITEM(item);
+				ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
+			}
+		}
+		else if (item->IsBook())
+		{
+			int iEmptyPos = ch->GetEmptyBookInventory(item);
+
+			if (iEmptyPos != -1)
+			{
+				item->AddToCharacter(ch, TItemPos(BOOK_INVENTORY, iEmptyPos));
+				LogManager::instance().ItemLog(ch, item, "GM", item->GetName());
+			}
+			else
+			{
+				M2_DESTROY_ITEM(item);
+				ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
+			}
+		}
+		else if (item->IsStone())
+		{
+			int iEmptyPos = ch->GetEmptyStoneInventory(item);
+
+			if (iEmptyPos != -1)
+			{
+				item->AddToCharacter(ch, TItemPos(STONE_INVENTORY, iEmptyPos));
+				LogManager::instance().ItemLog(ch, item, "GM", item->GetName());
+			}
+			else
+			{
+				M2_DESTROY_ITEM(item);
+				ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
+			}
+		}
+#endif
 		else
 		{
 			int iEmptyPos = ch->GetEmptyInventory(item->GetSize());
@@ -944,6 +991,29 @@ ACMD(do_item_purge)
 			ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
 		}
 	}
+#ifdef ENABLE_SPECIAL_STORAGE
+	for (i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if ((item = ch->GetItem(TItemPos(UPGRADE_INVENTORY, i ))))
+		{
+			ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
+		}
+	}
+	for (i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if ((item = ch->GetItem(TItemPos(BOOK_INVENTORY, i ))))
+		{
+			ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
+		}
+	}
+	for (i = 0; i < SPECIAL_INVENTORY_MAX_NUM; ++i)
+	{
+		if ((item = ch->GetItem(TItemPos(STONE_INVENTORY, i ))))
+		{
+			ITEM_MANAGER::instance().RemoveItem(item, "PURGE");
+		}
+	}
+#endif
 }
 
 ACMD(do_state)
