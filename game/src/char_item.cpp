@@ -4597,6 +4597,46 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case ITEM_AUTO_HP_RECOVERY_S:
 							case ITEM_AUTO_HP_RECOVERY_M:
 							case ITEM_AUTO_HP_RECOVERY_L:
+	#ifdef ENABLE_NEW_TYPE_OF_POTION
+							case NEW_MOVE_SPEED_POTION:
+							case NEW_ATTACK_SPEED_POTION:
+
+							{
+								EAffectTypes type = AFFECT_NONE;
+								if (item->GetVnum() == NEW_MOVE_SPEED_POTION)
+									type = AFFECT_MOV_SPEED;
+								if (item->GetVnum() == NEW_ATTACK_SPEED_POTION)
+									type = AFFECT_ATT_SPEED;
+								if (AFFECT_NONE == type)
+									break;
+								CAffect * pAffect = FindAffect(type);
+								if (NULL == pAffect)
+									{
+									EPointTypes bonus = POINT_NONE;
+									EAffectBits flag = AFF_NONE;
+									if (item->GetVnum() == NEW_MOVE_SPEED_POTION)
+									{
+										bonus = POINT_MOV_SPEED;
+										flag = AFF_MOV_SPEED_POTION;
+									}
+									if (item->GetVnum() == NEW_ATTACK_SPEED_POTION)
+									{
+										bonus = POINT_ATT_SPEED;
+										flag = AFF_ATT_SPEED_POTION;
+									}
+									AddAffect(type, bonus, item->GetValue(2), flag, INFINITE_AFFECT_DURATION, 0, true);
+									item->Lock(true);
+									item->SetSocket(0, true);
+								}
+								else
+								{
+									RemoveAffect(pAffect);
+									item->Lock(false);
+									item->SetSocket(0, false);
+								}
+							}
+							break;
+	#endif
 							case ITEM_AUTO_HP_RECOVERY_X:
 							case ITEM_AUTO_SP_RECOVERY_S:
 							case ITEM_AUTO_SP_RECOVERY_M:
