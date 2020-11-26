@@ -50,12 +50,7 @@ void Cube_open (LPCHARACTER ch);
 void Cube_close (LPCHARACTER ch);
 
 void Cube_show_list (LPCHARACTER ch);
-// void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index);
-#ifdef ENABLE_SPECIAL_STORAGE
-void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index, int inven_type);
-#else
 void Cube_add_item (LPCHARACTER ch, int cube_index, int inven_index);
-#endif
 void Cube_delete_item (LPCHARACTER ch, int cube_index);
 
 void Cube_request_result_list(LPCHARACTER ch);

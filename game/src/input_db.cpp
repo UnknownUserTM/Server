@@ -1550,11 +1550,6 @@ void CInputDB::ItemLoad(LPDESC d, const char * c_pData)
 			{
 				case INVENTORY:
 				case DRAGON_SOUL_INVENTORY:
-#ifdef ENABLE_SPECIAL_STORAGE
-				case UPGRADE_INVENTORY:
-				case BOOK_INVENTORY:
-				case STONE_INVENTORY:
-#endif
 					item->AddToCharacter(ch, TItemPos(p->window, p->pos));
 					break;
 

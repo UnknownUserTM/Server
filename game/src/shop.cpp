@@ -274,20 +274,6 @@ int64_t CShop::Buy(LPCHARACTER ch, BYTE pos)
 	{
 		iEmptyPos = ch->GetEmptyDragonSoulInventory(item);
 	}
-#ifdef ENABLE_SPECIAL_STORAGE
-	else if (item->IsUpgradeItem())
-	{
-		iEmptyPos = ch->GetEmptyUpgradeInventory(item);
-	}
-	else if (item->IsBook())
-	{
-		iEmptyPos = ch->GetEmptyBookInventory(item);
-	}
-	else if (item->IsStone())
-	{
-		iEmptyPos = ch->GetEmptyStoneInventory(item);
-	}
-#endif
 	else
 	{
 		iEmptyPos = ch->GetEmptyInventory(item->GetSize());
@@ -362,14 +348,6 @@ int64_t CShop::Buy(LPCHARACTER ch, BYTE pos)
 			item->RemoveFromCharacter();
 			if (item->IsDragonSoul())
 				item->AddToCharacter(ch, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyPos));
-#ifdef ENABLE_SPECIAL_STORAGE
-			else if (item->IsUpgradeItem())
-				item->AddToCharacter(ch, TItemPos(UPGRADE_INVENTORY, iEmptyPos));
-			else if (item->IsBook())
-				item->AddToCharacter(ch, TItemPos(BOOK_INVENTORY, iEmptyPos));
-			else if (item->IsStone())
-				item->AddToCharacter(ch, TItemPos(STONE_INVENTORY, iEmptyPos));
-#endif
 			else
 				item->AddToCharacter(ch, TItemPos(INVENTORY, iEmptyPos));
 			ITEM_MANAGER::instance().FlushDelayedSave(item);
@@ -396,15 +374,6 @@ int64_t CShop::Buy(LPCHARACTER ch, BYTE pos)
 	{
 		if (item->IsDragonSoul())
 			item->AddToCharacter(ch, TItemPos(DRAGON_SOUL_INVENTORY, iEmptyPos));
-	
-#ifdef ENABLE_SPECIAL_STORAGE
-		else if (item->IsUpgradeItem())
-			item->AddToCharacter(ch, TItemPos(UPGRADE_INVENTORY, iEmptyPos));
-		else if (item->IsBook())
-			item->AddToCharacter(ch, TItemPos(BOOK_INVENTORY, iEmptyPos));
-		else if (item->IsStone())
-			item->AddToCharacter(ch, TItemPos(STONE_INVENTORY, iEmptyPos));
-#endif
 		else
 			item->AddToCharacter(ch, TItemPos(INVENTORY, iEmptyPos));
 		ITEM_MANAGER::instance().FlushDelayedSave(item);

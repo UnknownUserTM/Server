@@ -23,12 +23,8 @@ public:
 	void	StopShopping(LPCHARACTER ch);
 
 	void	Buy(LPCHARACTER ch, BYTE pos);
-	// void	Sell(LPCHARACTER ch, BYTE bCell, DWORD bCount=0);
-#ifdef ENABLE_SPECIAL_STORAGE
-	void	Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount = 0, BYTE bType = 0);
-#else
-	void	Sell(LPCHARACTER ch, BYTE bCell, BYTE bCount = 0);
-#endif
+	void	Sell(LPCHARACTER ch, BYTE bCell, DWORD bCount=0);
+
 	LPSHOP	CreatePCShop(LPCHARACTER ch, TShopItemTable * pTable, BYTE bItemCount);
 	LPSHOP	FindPCShop(DWORD dwVID);
 	void	DestroyPCShop(LPCHARACTER ch);

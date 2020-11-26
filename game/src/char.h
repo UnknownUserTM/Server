@@ -447,14 +447,7 @@ typedef struct character_point_instant
 	// 용혼석 인벤토리.
 	LPITEM			pDSItems[DRAGON_SOUL_INVENTORY_MAX_NUM];
 	WORD			wDSItemGrid[DRAGON_SOUL_INVENTORY_MAX_NUM];
-#ifdef ENABLE_SPECIAL_STORAGE
-	LPITEM			pSSUItems[SPECIAL_INVENTORY_MAX_NUM];
-	WORD			wSSUItemGrid[SPECIAL_INVENTORY_MAX_NUM];
-	LPITEM			pSSBItems[SPECIAL_INVENTORY_MAX_NUM];
-	WORD			wSSBItemGrid[SPECIAL_INVENTORY_MAX_NUM];
-	LPITEM			pSSSItems[SPECIAL_INVENTORY_MAX_NUM];
-	WORD			wSSSItemGrid[SPECIAL_INVENTORY_MAX_NUM];
-#endif
+
 	// by mhh
 	LPITEM			pCubeItems[CUBE_MAX_NUM];
 	LPCHARACTER		pCubeNpc;
@@ -1222,12 +1215,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		LPITEM			GetItem(TItemPos Cell) const;
 		LPITEM			GetInventoryItem(WORD wCell) const;
 		bool			IsEmptyItemGrid(TItemPos Cell, BYTE size, int iExceptionCell = -1) const;
-#ifdef ENABLE_SPECIAL_STORAGE
-		LPITEM			GetUpgradeInventoryItem(WORD wCell) const;
-		LPITEM			GetBookInventoryItem(WORD wCell) const;
-		LPITEM			GetStoneInventoryItem(WORD wCell) const;
-#endif
-
 		bool			SwapItemToItem(TItemPos srcCell, TItemPos destCell);
 		bool			IS_PET_ITEM(int vnum);
 
@@ -1302,15 +1289,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		int				GetEmptyInventory(BYTE size) const;
 		int				GetEmptyDragonSoulInventory(LPITEM pItem) const;
 		void			CopyDragonSoulItemGrid(std::vector<WORD>& vDragonSoulItemGrid) const;
-#ifdef ENABLE_SPECIAL_STORAGE
-		int				GetSameUpgradeInventory(LPITEM pItem) const;
-		int				GetSameBookInventory(LPITEM pItem) const;
-		int				GetSameStoneInventory(LPITEM pItem) const;
 
-		int				GetEmptyUpgradeInventory(LPITEM pItem) const;
-		int				GetEmptyBookInventory(LPITEM pItem) const;
-		int				GetEmptyStoneInventory(LPITEM pItem) const;
-#endif
 		int				CountEmptyInventory() const;
 
 		int				CountSpecifyItem(DWORD vnum) const;
@@ -1759,7 +1738,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		virtual	void		HorseDie();
 		virtual bool		ReviveHorse();
 
-		virtual void		SendHorseInfo(int sendFromFunction = 0);
+		virtual void		SendHorseInfo();
 		virtual	void		ClearHorseInfo();
 
 		void				HorseSummon(bool bSummon, bool bFromFar = false, DWORD dwVnum = 0, const char* name = 0);
@@ -1790,7 +1769,6 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		BYTE				m_bSendHorseLevel;
 		BYTE				m_bSendHorseHealthGrade;
 		BYTE				m_bSendHorseStaminaGrade;
-		int					m_iLastHorseUpdateTime;
 
 		////////////////////////////////////////////////////////////////////////////////////////
 		// Detailed Log

@@ -5,13 +5,12 @@
 #include "config.h"
 #include "char_manager.h"
 
-// const int HORSE_HEALTH_DROP_INTERVAL = 365 * 24 * 60 * 60;
-// const int HORSE_STAMINA_CONSUME_INTERVAL = 365 * 24 * 60 * 60;
-// const int HORSE_STAMINA_REGEN_INTERVAL = 12 * 60;
-// const int HORSE_HP_DROP_INTERVAL = 60;
-const int HORSE_HEALTH_DROP_INTERVAL = 60;
-const int HORSE_STAMINA_CONSUME_INTERVAL = 3;
-const int HORSE_STAMINA_REGEN_INTERVAL = 6;
+const int HORSE_HEALTH_DROP_INTERVAL = 365 * 24 * 60 * 60;
+const int HORSE_STAMINA_CONSUME_INTERVAL = 365 * 24 * 60 * 60;
+const int HORSE_STAMINA_REGEN_INTERVAL = 12 * 60;
+//const int HORSE_HP_DROP_INTERVAL = 60;
+//const int HORSE_STAMINA_CONSUME_INTERVAL = 3;
+//const int HORSE_STAMINA_REGEN_INTERVAL = 6;
 
 THorseStat c_aHorseStat[HORSE_MAX_LEVEL+1] =
 /*
@@ -30,16 +29,16 @@ THorseStat c_aHorseStat[HORSE_MAX_LEVEL+1] =
  */
 {
 	{  0,	0,	1,	1,	0,	0,	0,	0,	0,	0,	0,	0  },
-	{ 25,	20104,	3,	4,	26,	35,	18,	9,	54,	43,	64,	32 },	// 1 (초급)
-	{ 25,	20104,	4,	4,	27,	36,	18,	9,	55,	44,	66,	33 },
-	{ 25,	20104,	5,	5,	28,	38,	19,	9,	56,	44,	67,	33 },
-	{ 25,	20104,	7,	5,	29,	39,	19,	10,	57,	45,	68,	34 },
-	{ 25,	20104,	8,	6,	30,	40,	20,	10,	58,	46,	69,	34 },
-	{ 25,	20104,	9,	6,	31,	41,	21,	10,	59,	47,	70,	35 },
-	{ 25,	20104,	11,	7,	32,	42,	21,	11,	60,	48,	72,	36 },
-	{ 25,	20104,	12,	7,	33,	44,	22,	11,	61,	48,	73,	36 },
-	{ 25,	20104,	13,	8,	34,	45,	22,	11,	62,	49,	74,	37 },
-	{ 25,	20104,	15,	10,	35,	46,	23,	12,	63,	50,	75,	37 },
+	{ 25,	20101,	3,	4,	26,	35,	18,	9,	54,	43,	64,	32 },	// 1 (초급)
+	{ 25,	20101,	4,	4,	27,	36,	18,	9,	55,	44,	66,	33 },
+	{ 25,	20101,	5,	5,	28,	38,	19,	9,	56,	44,	67,	33 },
+	{ 25,	20101,	7,	5,	29,	39,	19,	10,	57,	45,	68,	34 },
+	{ 25,	20101,	8,	6,	30,	40,	20,	10,	58,	46,	69,	34 },
+	{ 25,	20101,	9,	6,	31,	41,	21,	10,	59,	47,	70,	35 },
+	{ 25,	20101,	11,	7,	32,	42,	21,	11,	60,	48,	72,	36 },
+	{ 25,	20101,	12,	7,	33,	44,	22,	11,	61,	48,	73,	36 },
+	{ 25,	20101,	13,	8,	34,	45,	22,	11,	62,	49,	74,	37 },
+	{ 25,	20101,	15,	10,	35,	46,	23,	12,	63,	50,	75,	37 },
 	{ 35,	20104,	18,	30,	40,	53,	27,	13,	69,	55,	82,	41 },	// 11 (중급)
 	{ 35,	20104,	19,	35,	41,	54,	27,	14,	70,	56,	84,	42 },
 	{ 35,	20104,	21,	40,	42,	56,	28,	14,	71,	56,	85,	42 },
@@ -175,7 +174,7 @@ void CHorseRider::UpdateHorseStamina(int iStamina, bool bSend)
 	}
 
 	if (bSend)
-		SendHorseInfo(1);
+		SendHorseInfo();
 }
 
 bool CHorseRider::StartRiding()
@@ -194,7 +193,7 @@ bool CHorseRider::StartRiding()
 
 	m_Horse.bRiding = true;
 	StartStaminaConsumeEvent();
-	SendHorseInfo(2);
+	SendHorseInfo();
 	return true;
 }
 
@@ -354,7 +353,7 @@ void CHorseRider::UpdateHorseHealth(int iHealth, bool bSend)
 		HorseDie();
 
 	if (bSend)
-		SendHorseInfo(3);
+		SendHorseInfo();
 }
 
 void CHorseRider::HorseDie()
@@ -375,7 +374,7 @@ void CHorseRider::SetHorseLevel(int iLevel)
 
 	ResetHorseHealthDropTime();
 
-	SendHorseInfo(4);
+	SendHorseInfo();
 }
 
 BYTE CHorseRider::GetHorseGrade()

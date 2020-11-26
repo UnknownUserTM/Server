@@ -52,16 +52,6 @@
 	// ch->UseItem(TItemPos (INVENTORY, index));
 // }
 
-ACMD(do_sitdown)
-{
-	ch->Sitdown(1);
-}
-
-ACMD(do_standup)
-{
-	ch->Standup();
-}
-
 ACMD(do_reset_pickup_filter)
 {
 	ch->RemoveAffect(AFFECT_PICKUP_WEAPON_BLOCK);
@@ -2758,25 +2748,13 @@ ACMD(do_cube)
 
 	dev_log(LOG_DEB0, "CUBE COMMAND <%s>: %s", ch->GetName(), argument);
 	int cube_index = 0, inven_index = 0;
-	// before SpecialInventory Nov2020 Exterminatus
-	// const char *line;
-
-	// char arg1[256], arg2[256], arg3[256];
-
-	// line = two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
-	// one_argument(line, arg3, sizeof(arg3));
-#ifdef ENABLE_SPECIAL_STORAGE
-	int inven_type = 0;
-	
-	char arg1[256], arg2[256], arg3[256], arg4[256];
-	two_arguments (two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2)), arg3, sizeof(arg3), arg4, sizeof(arg4));
-#else
 	const char *line;
+
 	char arg1[256], arg2[256], arg3[256];
 
 	line = two_arguments(argument, arg1, sizeof(arg1), arg2, sizeof(arg2));
 	one_argument(line, arg3, sizeof(arg3));
-#endif
+
 	if (0 == arg1[0])
 	{
 		// print usage
@@ -2837,23 +2815,13 @@ ACMD(do_cube)
 
 		case 'a':	// add cue_index inven_index
 			{
-				// if (0 == arg2[0] || !isdigit(*arg2) ||
-					// 0 == arg3[0] || !isdigit(*arg3))
-					// return;
-#ifdef ENABLE_SPECIAL_STORAGE
-				if (0 == arg2[0] || !isdigit(*arg2) || 0 == arg3[0] || !isdigit(*arg3) || 0 == arg4[0] || !isdigit(*arg4))
-#else
-				if (0 == arg2[0] || !isdigit(*arg2) || 0 == arg3[0] || !isdigit(*arg3))
-#endif
+				if (0 == arg2[0] || !isdigit(*arg2) ||
+					0 == arg3[0] || !isdigit(*arg3))
+					return;
+
 				str_to_number(cube_index, arg2);
 				str_to_number(inven_index, arg3);
-				// Cube_add_item (ch, cube_index, inven_index);
-#ifdef ENABLE_SPECIAL_STORAGE
-				str_to_number(inven_type, arg4);
-				Cube_add_item (ch, cube_index, inven_index, inven_type);
-#else
 				Cube_add_item (ch, cube_index, inven_index);
-#endif
 			}
 			break;
 

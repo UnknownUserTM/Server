@@ -1230,49 +1230,21 @@ int CInputMain::Shop(LPCHARACTER ch, const char * data, size_t uiBytes)
 				return sizeof(BYTE);
 			}
 
-		// case SHOP_SUBHEADER_CG_SELL2:
-			// {
-				// if (uiBytes < sizeof(BYTE) + sizeof(DWORD))
-					// return -1;
-
-				// BYTE pos = *(c_pData++);
-				// DWORD count = *(c_pData++);
-				
-				// c_pData += sizeof(DWORD);
-
-				// sys_log(0, "INPUT: %s SHOP: SELL2", ch->GetName());
-				// CShopManager::instance().Sell(ch, pos, count);
-				// return sizeof(BYTE) + sizeof(DWORD);
-			// }
-#ifdef ENABLE_SPECIAL_STORAGE
 		case SHOP_SUBHEADER_CG_SELL2:
 			{
-				if (uiBytes < sizeof(BYTE) + sizeof(BYTE) + sizeof(BYTE))
-					return -1;
-
-				const BYTE wPos = *reinterpret_cast<const BYTE*>(c_pData);
-				const BYTE bCount = *(c_pData + sizeof(BYTE));
-				const BYTE bType = *(c_pData + sizeof(BYTE) + sizeof(BYTE));
-
-				sys_log(0, "INPUT: %s SHOP: SELL2", ch->GetName());
-
-				CShopManager::instance().Sell(ch, wPos, bCount, bType);
-				return sizeof(BYTE) + sizeof(BYTE) + sizeof(BYTE);
-			}
-#else
-		case SHOP_SUBHEADER_CG_SELL2:
-			{
-				if (uiBytes < sizeof(BYTE) + sizeof(BYTE))
+				if (uiBytes < sizeof(BYTE) + sizeof(DWORD))
 					return -1;
 
 				BYTE pos = *(c_pData++);
-				BYTE count = *(c_pData);
+				DWORD count = *(c_pData++);
+				
+				c_pData += sizeof(DWORD);
 
 				sys_log(0, "INPUT: %s SHOP: SELL2", ch->GetName());
 				CShopManager::instance().Sell(ch, pos, count);
-				return sizeof(BYTE) + sizeof(BYTE);
+				return sizeof(BYTE) + sizeof(DWORD);
 			}
-#endif
+
 		default:
 			sys_err("CInputMain::Shop : Unknown subheader %d : %s", p->subheader, ch->GetName());
 			break;
@@ -2269,12 +2241,7 @@ void CInputMain::SafeboxCheckin(LPCHARACTER ch, const char * c_pData)
 	// @fixme140 END
 
 	pkItem->RemoveFromCharacter();
-	// if (!pkItem->IsDragonSoul())
-#ifdef ENABLE_SPECIAL_STORAGE
-	if (!pkItem->IsDragonSoul() && !pkItem->IsUpgradeItem() && !pkItem->IsBook() && !pkItem->IsStone())
-#else
 	if (!pkItem->IsDragonSoul())
-#endif
 		ch->SyncQuickslot(QUICKSLOT_TYPE_ITEM, p->ItemPos.cell, 255);
 	pkSafebox->Add(p->bSafePos, pkItem);
 
@@ -2340,87 +2307,9 @@ void CInputMain::SafeboxCheckout(LPCHARACTER ch, const char * c_pData, bool bMal
 		pkItem->AddToCharacter(ch, DestPos);
 		ITEM_MANAGER::instance().FlushDelayedSave(pkItem);
 	}
-#ifdef ENABLE_SPECIAL_STORAGE
-	else if (pkItem->IsUpgradeItem())
-	{
-		if (UPGRADE_INVENTORY != p->ItemPos.window_type)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<창고> 옮길 수 없는 위치입니다."));
-			return;
-		}
-
-		TItemPos DestPos = p->ItemPos;
-
-		int iCell = ch->GetEmptyUpgradeInventory(pkItem);
-		if (iCell < 0)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<창고> 옮길 수 없는 위치입니다."));
-			return ;
-		}
-		DestPos = TItemPos (UPGRADE_INVENTORY, iCell);
-
-		pkSafebox->Remove(p->bSafePos);
-		pkItem->AddToCharacter(ch, DestPos);
-		ITEM_MANAGER::instance().FlushDelayedSave(pkItem);
-	}
-	else if (pkItem->IsBook())
-	{
-		if (BOOK_INVENTORY != p->ItemPos.window_type)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<창고> 옮길 수 없는 위치입니다."));
-			return;
-		}
-
-		TItemPos DestPos = p->ItemPos;
-
-		int iCell = ch->GetEmptyBookInventory(pkItem);
-		if (iCell < 0)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<창고> 옮길 수 없는 위치입니다."));
-			return ;
-		}
-		DestPos = TItemPos (BOOK_INVENTORY, iCell);
-
-		pkSafebox->Remove(p->bSafePos);
-		pkItem->AddToCharacter(ch, DestPos);
-		ITEM_MANAGER::instance().FlushDelayedSave(pkItem);
-	}
-	else if (pkItem->IsStone())
-	{
-		if (STONE_INVENTORY != p->ItemPos.window_type)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<창고> 옮길 수 없는 위치입니다."));
-			return;
-		}
-
-		TItemPos DestPos = p->ItemPos;
-
-		int iCell = ch->GetEmptyStoneInventory(pkItem);
-		if (iCell < 0)
-		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT("<창고> 옮길 수 없는 위치입니다."));
-			return ;
-		}
-		DestPos = TItemPos (STONE_INVENTORY, iCell);
-
-		pkSafebox->Remove(p->bSafePos);
-		pkItem->AddToCharacter(ch, DestPos);
-		ITEM_MANAGER::instance().FlushDelayedSave(pkItem);
-	}
-#endif	
-	
-	
 	else
 	{
-		// if (DRAGON_SOUL_INVENTORY == p->ItemPos.window_type)
-#ifdef ENABLE_SPECIAL_STORAGE
-		if (DRAGON_SOUL_INVENTORY == p->ItemPos.window_type ||
-			UPGRADE_INVENTORY == p->ItemPos.window_type ||
-			BOOK_INVENTORY == p->ItemPos.window_type ||
-			STONE_INVENTORY == p->ItemPos.window_type)
-#else
 		if (DRAGON_SOUL_INVENTORY == p->ItemPos.window_type)
-#endif
 		{
 			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "<창고> 옮길 수 없는 위치입니다."));
 			return;

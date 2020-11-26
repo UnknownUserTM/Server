@@ -317,15 +317,6 @@ LPITEM CItem::RemoveFromCharacter()
 				else
 					pOwner->SetItem(TItemPos(m_bWindow, m_wCell), NULL);
 			}
-#ifdef ENABLE_SPECIAL_STORAGE
-			else if (IsUpgradeItem() || IsBook() || IsStone())
-			{
-				if (m_wCell >= INVENTORY_MAX_NUM) //if (m_wCell >= SPECIAL_INVENTORY_MAX_NUM)
-					sys_err("CItem::RemoveFromCharacter: pos >= SPECIAL_INVENTORY_MAX_NUM");
-				else
-					pOwner->SetItem(TItemPos(m_bWindow, m_wCell), NULL);
-			}
-#endif
 			else
 			{
 				TItemPos cell(INVENTORY, m_wCell);
@@ -371,16 +362,7 @@ bool CItem::AddToCharacter(LPCHARACTER ch, TItemPos Cell)
 			return false;
 		}
 	}
-#ifdef ENABLE_SPECIAL_STORAGE
-	else if (UPGRADE_INVENTORY == window_type || BOOK_INVENTORY == window_type || STONE_INVENTORY == window_type)
-	{
-		if (m_wCell >= SPECIAL_INVENTORY_MAX_NUM)
-		{
-			sys_err("CItem::AddToCharacter: cell overflow: %s to %s cell %d", m_pProto->szName, ch->GetName(), m_wCell);
-			return false;
-		}
-	}
-#endif	
+	
 	bool bWereMine = this->GetLastOwnerPID() == ch->GetPlayerID();
 
 	if (ch->GetDesc())
@@ -2065,21 +2047,6 @@ bool CItem::IsDragonSoul()
 {
 	return GetType() == ITEM_DS;
 }
-
-#ifdef ENABLE_SPECIAL_STORAGE
-bool CItem::IsUpgradeItem()
-{
-	return (GetType() == ITEM_MATERIAL && GetSubType() == MATERIAL_LEATHER);
-}
-bool CItem::IsBook()
-{
-	return (GetVnum() == 50300);
-}
-bool CItem::IsStone()
-{
-	return (GetType() == ITEM_METIN && GetSubType() == METIN_NORMAL);
-}
-#endif
 
 int CItem::GiveMoreTime_Per(float fPercent)
 {

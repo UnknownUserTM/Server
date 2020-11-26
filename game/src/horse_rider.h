@@ -8,7 +8,7 @@
 // #include "stdafx.h"
 // #endif
 
-const int HORSE_MAX_LEVEL = 50;
+const int HORSE_MAX_LEVEL = 30;
 
 struct THorseStat
 {
@@ -59,7 +59,7 @@ class CHorseRider
 
 		void EnterHorse();
 
-		virtual void SendHorseInfo(int sendFromFunction = 0) {}
+		virtual void SendHorseInfo() {}
 		virtual void ClearHorseInfo() {}
 
 		virtual void UpdateRideTime(int interval) {}

@@ -2076,8 +2076,7 @@ void CHARACTER::SetProto(const CMob * pkMob)
 			GetRaceNum() == 20106 ||
 			GetRaceNum() == 20107 ||
 			GetRaceNum() == 20108 ||
-			GetRaceNum() == 20109 ||
-			GetRaceNum() == 20114
+			GetRaceNum() == 20109
 	  )
 	{
 		m_stateIdle.Set(this, &CHARACTER::BeginStateEmpty, &CHARACTER::StateHorse, &CHARACTER::EndStateEmpty);
