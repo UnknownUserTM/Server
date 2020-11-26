@@ -4597,6 +4597,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							case ITEM_AUTO_HP_RECOVERY_S:
 							case ITEM_AUTO_HP_RECOVERY_M:
 							case ITEM_AUTO_HP_RECOVERY_L:
+<<<<<<< HEAD
 #ifdef ENABLE_NEW_TYPE_OF_POTION
 							case NEW_MOVE_SPEED_POTION:
 							case NEW_ATTACK_SPEED_POTION:
@@ -4699,6 +4700,8 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 							}
 							break;
 #endif
+=======
+>>>>>>> parent of 1c5649d... - permanent items
 							case ITEM_AUTO_HP_RECOVERY_X:
 							case ITEM_AUTO_SP_RECOVERY_S:
 							case ITEM_AUTO_SP_RECOVERY_M:
