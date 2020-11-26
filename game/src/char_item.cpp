@@ -4602,6 +4602,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 #ifdef ENABLE_NEW_TYPE_OF_POTION
 							case NEW_MOVE_SPEED_POTION:
 							case NEW_ATTACK_SPEED_POTION:
+							case WEISSER_TAU:
+							case BLAUER_TAU:
+							case GELBER_TAU:
+							case DRACHENGOTT_ANGRIFF:
+							case DRACHENGOTT_VERTEIDIGUNG:
+							case DRACHENGOTT_LEBEN:
+							case KRITISCHER_KAMPF:
+							case DURCHBOHRENDER_KAMPF:
 							{
 								EAffectTypes type = AFFECT_NONE;
 
@@ -4609,6 +4617,22 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									type = AFFECT_MOV_SPEED;
 								if (item->GetVnum() == NEW_ATTACK_SPEED_POTION)
 									type = AFFECT_ATT_SPEED;
+								if (item->GetVnum() == WEISSER_TAU)
+									type = WEISSER_TAU_AFFECT;
+								if (item->GetVnum() == BLAUER_TAU)
+									type = BLAUER_TAU_AFFECT;
+								if (item->GetVnum() == GELBER_TAU)
+									type = GELBER_TAU_AFFECT;
+								if (item->GetVnum() == DRACHENGOTT_ANGRIFF)
+									type = DRACHENGOTT_ANGRIFF_AFFECT;
+								if (item->GetVnum() == DRACHENGOTT_VERTEIDIGUNG)
+									type = DRACHENGOTT_VERTEIDIGUNG_AFFECT;
+								if (item->GetVnum() == DRACHENGOTT_LEBEN)
+									type = DRACHENGOTT_LEBEN_AFFECT;
+								if (item->GetVnum() == KRITISCHER_KAMPF)
+									type = KRITISCHER_KAMPF_AFFECT;
+								if (item->GetVnum() == DURCHBOHRENDER_KAMPF)
+									type = DURCHBOHRENDER_KAMPF_AFFECT;
 
 								if (AFFECT_NONE == type)
 								break;
@@ -4629,6 +4653,38 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 									{
 										bonus = POINT_ATT_SPEED;
 										flag = AFF_ATT_SPEED_POTION;
+									}
+									if (item->GetVnum() == WEISSER_TAU)
+									{
+										bonus = POINT_DEF_GRADE_BONUS;
+									}
+									if (item->GetVnum() == BLAUER_TAU)
+									{
+										bonus = POINT_ATT_GRADE_BONUS;
+									}
+									if (item->GetVnum() == GELBER_TAU)
+									{
+										bonus = POINT_PENETRATE_PCT;
+									}
+									if (item->GetVnum() == DRACHENGOTT_ANGRIFF)
+									{
+										bonus = APPLY_MALL_ATTBONUS;
+									}
+									if (item->GetVnum() == DRACHENGOTT_VERTEIDIGUNG)
+									{
+										bonus = APPLY_MALL_DEFBONUS;
+									}
+									if (item->GetVnum() == DRACHENGOTT_LEBEN)
+									{
+										bonus = APPLY_MAX_HP_PCT;
+									}
+									if (item->GetVnum() == KRITISCHER_KAMPF)
+									{
+										bonus = APPLY_CRITICAL_PCT;
+									}
+									if (item->GetVnum() == DURCHBOHRENDER_KAMPF)
+									{
+										bonus = APPLY_PENETRATE_PCT;
 									}
 
 									AddAffect(type, bonus, item->GetValue(2), flag, INFINITE_AFFECT_DURATION, 0, true);
