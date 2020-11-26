@@ -69,7 +69,8 @@ bool CHARACTER::StartRiding()
 	HorseSummon(false);
 
 	MountVnum(dwMountVnum);
-
+	AddAffect(AFFECT_RIDE_SPEED, POINT_MOV_SPEED, 60, 0, INFINITE_AFFECT_DURATION, 0, true);
+	
 	if(test_server)
 		sys_log(0, "Ride Horse : %s ", GetName());
 
@@ -96,7 +97,7 @@ bool CHARACTER::StopRiding()
 			ComputePoints();
 			UpdatePacket();
 		}
-
+		RemoveAffect(AFFECT_RIDE_SPEED);
 		PointChange(POINT_ST, 0);
 		PointChange(POINT_DX, 0);
 		PointChange(POINT_HT, 0);
