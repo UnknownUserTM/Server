@@ -1755,6 +1755,43 @@ void CHARACTER::UseSilkBotary(void)
 }
 // END_OF_MYSHOP_PRICE_LIST
 
+
+bool CHARACTER::IsPermaAffectActive(LPITEM item)
+{
+	switch (item->GetVnum())
+	{
+		case 50821: // Roter Tau
+			if(FindAffect(AFFECT_PERMA_POTION_160482))
+				return true;
+				
+		case 50825: // Blauer Tau
+			if(FindAffect(AFFECT_PERMA_POTION_160481))
+				return true;
+			
+		case 72037: // Drachengott-Leben
+			if(FindAffect(AFFECT_PERMA_POTION_160485))
+				return true;	
+			
+		case 72034: // Drachengott-Verteidigung
+			if(FindAffect(AFFECT_PERMA_POTION_160484))
+				return true;
+			
+		case 39018: // Drachengott-Angriff
+			if(FindAffect(AFFECT_PERMA_POTION_160483))
+				return true;
+			
+		case 160489: // Kritischer Kampf
+			if(FindAffect(AFFECT_PERMA_POTION_160486))
+				return true;
+			
+		case 160488: // Durchbohrender Kampf
+			if(FindAffect(AFFECT_PERMA_POTION_160487))
+				return true;
+	}
+	return false;
+}
+
+
 #ifdef ENABLE_NEW_AFFECT_POTION
 bool CHARACTER::SetAffectPotion(LPITEM item)
 {
@@ -2881,6 +2918,14 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 
 					case USE_AFFECT :
 						{
+							
+							if (IsPermaAffectActive(item))
+							{
+								ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "이미 효과가 걸려 있습니다."));
+								return false;
+
+							}
+							
 							if (FindAffect(AFFECT_EXP_BONUS_EURO_FREE, aApplyInfo[item->GetValue(1)].bPointType))
 							{
 								ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "이미 효과가 걸려 있습니다."));
@@ -5276,7 +5321,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											LogManager::instance().ItemLog(this, item, "CLEAN_SOCKET", buf);
 										}
 
-										item->SetCount(item->GetCount() - 1);
+										// item->SetCount(item->GetCount() - 1);
 
 									}
 									break;
@@ -5295,13 +5340,13 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										return false;
 									}
 									
-									if(GetGold() < 10000)
-									{
-										ChatPacket(CHAT_TYPE_INFO, "Das andern der Boni kostet 10.000 Yang!");
-										return false;
-									}
+									// if(GetGold() < 10000)
+									// {
+										// ChatPacket(CHAT_TYPE_INFO, "Das andern der Boni kostet 10.000 Yang!");
+										// return false;
+									// }
 									
-									PointChange(POINT_GOLD, -10000, true);
+									// PointChange(POINT_GOLD, -10000, true);
 
 									if ((GM_PLAYER == GetGMLevel()) && (false == test_server) && (g_dwItemBonusChangeTime > 0))
 									{
@@ -5866,6 +5911,15 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 		case ITEM_BLEND:
 			// 새로운 약초들
 			sys_log(0,"ITEM_BLEND!!");
+			
+			// PERMA TAU BLOCK
+			if (IsPermaAffectActive(item))
+			{
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "이미 효과가 걸려 있습니다."));
+				return false;
+			}
+			
+			
 			if (Blend_Item_find(item->GetVnum()))
 			{
 				int		affect_type		= AFFECT_BLEND;

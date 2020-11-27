@@ -661,6 +661,7 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 #ifdef ENABLE_NEW_AFFECT_POTION	
 		bool			SetAffectPotion(LPITEM item);
 #endif	
+		bool			IsPermaAffectActive(LPITEM item);
 
 		const char *	GetName() const;
 		const VID &		GetVID() const		{ return m_vid;		}
