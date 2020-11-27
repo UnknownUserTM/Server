@@ -3723,7 +3723,105 @@ teleport_area:
 		ch->ChatPacket(CHAT_TYPE_INFO,"Test");
 		// ch->SendQuestIntroDescPaket(lua_tostring(L, 1),lua_tostring(L, 2));
 		return 0;
-	}	
+	}
+
+	int pc_set_perma_potion_affect(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		LPITEM item = ch->GetInventoryItem(lua_tonumber(L, 1)); // slot
+		switch (item->GetVnum())
+		{
+			case 160480:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160480))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160480);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160480, POINT_DEF_GRADE_BONUS, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;
+			case 160481:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160481))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160481);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160481, POINT_ATT_GRADE_BONUS, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;			
+			case 160482:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160482))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160482);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160482, POINT_PENETRATE_PCT, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;			
+			case 160483:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160483))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160483);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160483, POINT_MALL_ATTBONUS, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;			
+			case 160484:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160484))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160484);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160484, POINT_MALL_DEFBONUS, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;			
+			case 160485:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160485))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160485);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160485, POINT_MAX_HP_PCT, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;			
+			case 160486:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160486))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160486);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160486, POINT_CRITICAL_PCT, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;			
+			case 160487:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160487))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160487);
+				
+				ch->AddAffect(AFFECT_PERMA_POTION_160487, POINT_PENETRATE_PCT, item->GetValue(2), AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				break;		
+		}
+	}
+
+	int pc_rem_perma_potion_affect(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		LPITEM item = ch->GetInventoryItem(lua_tonumber(L, 1)); // slot
+		switch (item->GetVnum())
+		{
+			case 160480:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160480))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160480);
+				break;
+			case 160481:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160481))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160481);
+				break;			
+			case 160482:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160482))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160482);
+				break;			
+			case 160483:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160483))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160483);
+				break;			
+			case 160484:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160484))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160484);
+				break;			
+			case 160485:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160485))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160485);
+				break;			
+			case 160486:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160486))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160486);
+				break;			
+			case 160487:
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160487))
+					ch->RemoveAffect(AFFECT_PERMA_POTION_160487);
+				break;		
+		}
+	}
 
 	void RegisterPCFunctionTable()
 	{
@@ -3947,6 +4045,10 @@ teleport_area:
 			{ "get_mount_pet_costume_cd",	pc_get_mount_pet_costume_cd	},		
 
 			{ "send_quest_intro_desc",	pc_send_quest_intro_desc	},		
+			
+			{ "set_perma_potion_affect",	pc_set_perma_potion_affect	},		
+			{ "rem_perma_potion_affect",	pc_rem_perma_potion_affect	},		
+
 			
 			{ "get_killee_drop_pct",	pc_get_killee_drop_pct	}, /* mob_vnum.kill 이벤트에서 killee와 pc와의 level 차이, pc의 프리미엄 드랍률 등등을 고려한 아이템 드랍 확률.
 																    * return 값은 (분자, 분모).
