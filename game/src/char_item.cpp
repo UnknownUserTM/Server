@@ -5437,11 +5437,11 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 										snprintf(buf, sizeof(buf), "%u", item2->GetID());
 										// LogManager::instance().ItemLog(this, item, "CHANGE_ATTRIBUTE", buf);
 									}
-									if(item->GetVnum() == 76014)
-									{
-										item->SetCount(item->GetCount() - 1);
-									}
-									//item->SetCount(item->GetCount() - 1);
+									// if(item->GetVnum() == 76014)
+									// {
+										// item->SetCount(item->GetCount() - 1);
+									// }
+									item->SetCount(item->GetCount() - 1);
 									break;
 
 								case USE_ADD_ATTRIBUTE :
@@ -5507,7 +5507,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											}
 											
 											ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "속성 추가에 성공하였습니다."));
-
+											// item->SetCount(item->GetCount() - 1);
 											int iAddedIdx = item2->GetAttributeCount() - 1;
 											// LogManager::instance().ItemLog(
 													// GetPlayerID(),
@@ -5525,7 +5525,7 @@ bool CHARACTER::UseItemEx(LPITEM item, TItemPos DestCell)
 											// LogManager::instance().ItemLog(this, item, "ADD_ATTRIBUTE_FAIL", buf);
 										}
 
-										item->SetCount(item->GetCount() - 1);
+										// item->SetCount(item->GetCount() - 1);
 									}
 									else
 									{
