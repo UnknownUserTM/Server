@@ -7013,7 +7013,30 @@ bool CHARACTER::EquipItem(LPITEM item, int iCandidateCell)
 
 	if (iWearCell < 0)
 		return false;
+	
+	
+	if (item->GetType() == ITEM_UNIQUE)
+	{
+		if (item->GetValue(5) != 0)
+		{
+			LPITEM item2;
+			item2 = GetInventoryItem(187);
+			if(item2)
+			{
+				if (item2->GetVnum() == item->GetValue(5))
+					return false;
+			}
+			LPITEM item3;
+			item3 = GetInventoryItem(188);
+			if(item3)
+			{
+				if (item3->GetVnum() == item->GetValue(5))
+					return false;
+			}
+		}		
+	}
 
+	
 	// 무언가를 탄 상태에서 턱시도 입기 금지
 	if (iWearCell == WEAR_BODY && IsRiding() && (item->GetVnum() >= 11901 && item->GetVnum() <= 11904))
 	{
