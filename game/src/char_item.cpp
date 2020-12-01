@@ -479,15 +479,16 @@ void CHARACTER::SetWear(BYTE bCell, LPITEM item)
 
 	SetItem(TItemPos (INVENTORY, INVENTORY_MAX_NUM + bCell), item);
 
+#ifndef KEPP_SKILL_AT_WARP
 	if (!item && bCell == WEAR_WEAPON)
 	{
-		// 귀검 사용 시 벗는 것이라면 효과를 없애야 한다.
+// ±I°E ≫c¿e ½A ¹þ´A °IAI¶o¸e E¿°u¸| ¾ø¾O¾ß CN´U.
 		if (IsAffectFlag(AFF_GWIGUM))
 			RemoveAffect(SKILL_GWIGEOM);
-
 		if (IsAffectFlag(AFF_GEOMGYEONG))
 			RemoveAffect(SKILL_GEOMKYUNG);
 	}
+#endif
 }
 
 void CHARACTER::ClearItem()
@@ -8951,6 +8952,16 @@ bool CHARACTER::CanUnequipNow(const LPITEM item, bool check_costume) /*const*/
 	// 영원히 해제할 수 없는 아이템
 	if (IS_SET(item->GetFlag(), ITEM_FLAG_IRREMOVABLE))
 		return false;
+		
+#ifdef KEPP_SKILL_AT_WARP
+	if (item->GetType() == ITEM_WEAPON)
+	{
+		if (IsAffectFlag(AFF_GWIGUM))
+			RemoveAffect(SKILL_GWIGEOM);
+		if (IsAffectFlag(AFF_GEOMGYEONG))
+			RemoveAffect(SKILL_GEOMKYUNG);
+	}
+#endif
 
 	// 아이템 unequip시 인벤토리로 옮길 때 빈 자리가 있는 지 확인
 	{

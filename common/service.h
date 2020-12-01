@@ -25,3 +25,4 @@
 #define NEW_CLIENT_VERSION_CHECK
 #define CLIENT_VERSION "20191020" //YYYYMMdd
 #define ENABLE_NEW_TYPE_OF_POTION // Permanente Buffitems an-/ausschalten
+#define KEPP_SKILL_AT_WARP
