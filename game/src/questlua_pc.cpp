@@ -3823,6 +3823,219 @@ teleport_area:
 		}
 	}
 
+	int pc_set_normal_potion_affect(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		LPITEM item = ch->GetInventoryItem(lua_tonumber(L, 1)); // slot
+		switch (item->GetVnum())
+		{
+			case 160491:
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160491))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+				
+				ch->AddAffect(AFFECT_NORMAL_POTION_160491, POINT_PENETRATE_PCT, item->GetValue(0), AFF_NONE, item->GetValue(1), 0, true, true);
+				lua_pushboolean(L, true);
+				return 1;
+			case 160492:
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160492))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+				
+				ch->AddAffect(AFFECT_NORMAL_POTION_160492, POINT_ATT_GRADE_BONUS, item->GetValue(0), AFF_NONE, item->GetValue(1), 0, true, true);
+				lua_pushboolean(L, true);
+				return 1;
+			case 160493:
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160493))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+				
+				ch->AddAffect(AFFECT_NORMAL_POTION_160493, POINT_MAX_HP_PCT, item->GetValue(0), AFF_NONE, item->GetValue(1), 0, true, true);
+				lua_pushboolean(L, true);
+				return 1;
+			case 160494:
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160494))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+				
+				ch->AddAffect(AFFECT_NORMAL_POTION_160494, POINT_MALL_DEFBONUS, item->GetValue(0), AFF_NONE, item->GetValue(1), 0, true, true);
+				lua_pushboolean(L, true);
+				return 1;
+			case 160495:
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160495))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+				
+				ch->AddAffect(AFFECT_NORMAL_POTION_160495, APPLY_MALL_ATTBONUS, item->GetValue(0), AFF_NONE, item->GetValue(1), 0, true, true);
+				lua_pushboolean(L, true);
+				return 1;
+			case 160496:
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160496))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+				
+				ch->AddAffect(AFFECT_NORMAL_POTION_160496, POINT_CRITICAL_PCT, item->GetValue(0), AFF_NONE, item->GetValue(1), 0, true, true);
+				lua_pushboolean(L, true);
+				return 1;
+			case 160497:
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160497))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}
+				
+				ch->AddAffect(AFFECT_NORMAL_POTION_160497, POINT_PENETRATE_PCT, item->GetValue(0), AFF_NONE, item->GetValue(1), 0, true, true);
+				lua_pushboolean(L, true);
+				return 1;
+		}
+	}
+	
+	int pc_check_for_conflict_affect(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		
+		int itemVnum = (int) lua_tonumber(L, 1);
+		switch (itemVnum)
+		{
+			case 160480: // W Tau Perma
+				lua_pushboolean(L, true);
+				return 1;
+				
+			case 160481: // Blauer Tau PERMA
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160492))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+
+			case 160482: // Roter Tau PERMA
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160491))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+
+			case 160483: // Drachengott-Angriff PERMA
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160495))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;				
+
+			case 160484: // Drachengott-Verteidigung PERMA
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160494))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;			
+				
+			case 160485: // Drachengott-Leben PERMA
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160493))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;					
+
+			case 160486: // Kritischer Kampf Perma
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160496))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+
+			case 160487: // Durchbohrender Kampf Perma
+				if(ch->FindAffect(AFFECT_NORMAL_POTION_160497))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+			// wechsel zu normal items
+			case 160491: // Roter Tau
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160482))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+			case 160492: // Blauer Tau
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160481))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+			case 160493: // Drachengott-Leben
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160485))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+			case 160494: // Drachengott-Leben
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160484))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+			case 160495: // Drachengott-Angriff
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160483))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+			case 160496: // Krit.Kampf
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160486))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+			case 160497: // DB.Kampf
+				if(ch->FindAffect(AFFECT_PERMA_POTION_160487))
+				{
+					lua_pushboolean(L, false);
+					return 1;
+				}				
+				lua_pushboolean(L, true);
+				return 1;
+		}
+	}
+	
+	
 	void RegisterPCFunctionTable()
 	{
 		luaL_reg pc_functions[] =
@@ -4048,6 +4261,8 @@ teleport_area:
 			
 			{ "set_perma_potion_affect",	pc_set_perma_potion_affect	},		
 			{ "rem_perma_potion_affect",	pc_rem_perma_potion_affect	},		
+			{ "set_normal_potion_affect",	pc_set_normal_potion_affect	},		
+			{ "check_for_conflict_affect",	pc_check_for_conflict_affect	},		
 
 			
 			{ "get_killee_drop_pct",	pc_get_killee_drop_pct	}, /* mob_vnum.kill 이벤트에서 killee와 pc와의 level 차이, pc의 프리미엄 드랍률 등등을 고려한 아이템 드랍 확률.
