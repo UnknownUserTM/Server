@@ -47,6 +47,27 @@ enum
 	COMMANDAFFECT_SLOW,
 };
 
+ACMD(do_map_event)
+{
+	char arg1[256];
+	one_argument(argument, arg1, sizeof(arg1));
+
+	int map = 0;
+
+	str_to_number(map, arg1);
+
+	const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
+
+	for (itertype(c_ref_set) it = c_ref_set.begin(); it != c_ref_set.end(); ++it)
+	{
+		LPCHARACTER ch = (*it)->GetCharacter();
+		if (!ch)
+			continue;
+
+		ch->ChatPacket(CHAT_TYPE_COMMAND, "ev_map %d", map);
+	}
+}
+
 void Command_ApplyAffect(LPCHARACTER ch, const char* argument, const char* affectName, int cmdAffect)
 {
 	char arg1[256];
