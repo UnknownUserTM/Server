@@ -5,7 +5,8 @@
 #include "locale_service.h"
 #include "log.h"
 #include "desc.h"
-
+ACMD(do_stat_val);
+ACMD(do_remove_buff);
 ACMD(do_map_event);
 ACMD(do_reset_pickup_filter);
 ACMD(do_change_pickup_filter);
@@ -579,6 +580,9 @@ struct command_info cmd_info[] =
 	{ "dev_battlezone_reset_time",	do_dev_battlezone_reset_time,		0,		POS_DEAD,	GM_HIGH_WIZARD	},
 	
 	{ "user_announce_switch_complete",	do_user_announce_switch_complete,		0,		POS_DEAD,	GM_PLAYER	},
+
+	{ "remove_buff",	do_remove_buff,		0,		POS_DEAD,	GM_PLAYER	},
+	{ "stat_val",		do_stat_val,		0,		POS_DEAD,	GM_PLAYER	},
 	
 	//{ "user_set_pet_name",	do_set_pet_name,		0,		POS_DEAD,	GM_PLAYER	},
 	
