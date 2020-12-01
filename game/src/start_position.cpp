@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "start_position.h"
-//anderung.
+
 
 char g_nation_name[4][32] =
 {
@@ -62,9 +62,13 @@ DWORD arena_return_position[4][2] =
 DWORD g_create_position[4][2] =
 {
 	{		0,		0 },
-	{ 459800, 953900 },
-	{ 52070, 166600 },
-	{ 957300, 255200 },
+	// { 459800, 953900 },
+	// { 52070, 166600 },
+	// { 957300, 255200 },
+	// tutorial map 19.11.2020
+	{ 9524000, 9543300 },	// 신수국
+	{ 9524000, 9543300 },	// 천조국
+	{ 9524000, 9543300 }	// 진노국
 };
 
 DWORD g_create_position_canada[4][2] =
