@@ -1198,7 +1198,7 @@ int CInputLogin::Analyze(LPDESC d, BYTE bHeader, const char * c_pData)
 			break;
 
 		case HEADER_CG_SYMBOL_CRC:
-			GuildSymbolCRC(d, c_pData);
+//			GuildSymbolCRC(d, c_pData);
 			break;
 			/////////////////////////////////////
 
