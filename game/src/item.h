@@ -312,6 +312,13 @@ class CItem : public CEntity
 		{
 			return m_dwSIGVnum;
 		}
+#ifdef ENABLE_SEND_TARGET_INFO_EXTENDED
+	public:
+		void		SetRarity(DWORD rarity) { dwRarity = rarity; }
+		DWORD		GetRarity() { return dwRarity; }
+	protected:
+		DWORD		dwRarity;
+#endif
 };
 
 EVENTINFO(item_event_info)

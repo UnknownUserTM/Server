@@ -93,6 +93,9 @@ void CInputMain::TargetInfoLoad(LPCHARACTER ch, const char* c_pData)
 			pInfo.race = m_pkChrTarget->GetRaceNum();
 			pInfo.dwVnum = pkInfoItem->GetVnum();
 			pInfo.count = pkInfoItem->GetCount();
+#ifdef ENABLE_SEND_TARGET_INFO_EXTENDED
+			pInfo.rarity = pkInfoItem->GetRarity();
+#endif
 			ch->GetDesc()->Packet(&pInfo, sizeof(TPacketGCTargetInfo));
 		}
 		else
@@ -112,6 +115,9 @@ void CInputMain::TargetInfoLoad(LPCHARACTER ch, const char* c_pData)
 					pInfo.race = m_pkChrTarget->GetRaceNum();
 					pInfo.dwVnum = pkInfoItem->GetVnum();
 					pInfo.count = pkInfoItem->GetCount();
+#ifdef ENABLE_SEND_TARGET_INFO_EXTENDED
+					pInfo.rarity = pkInfoItem->GetRarity();
+#endif
 					ch->GetDesc()->Packet(&pInfo, sizeof(TPacketGCTargetInfo));
 			}
 		}

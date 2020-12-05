@@ -1543,13 +1543,26 @@ typedef struct packet_target
 } TPacketGCTarget;
 
 #ifdef __SEND_TARGET_INFO__
+// old before targetInfo Extended
+// typedef struct packet_target_info
+// {
+	// BYTE	header;
+	// DWORD	dwVID;
+	// DWORD	race;
+	// DWORD	dwVnum;
+	// BYTE	count;
+// } TPacketGCTargetInfo;
+
 typedef struct packet_target_info
 {
 	BYTE	header;
 	DWORD	dwVID;
 	DWORD	race;
 	DWORD	dwVnum;
-	BYTE	count;
+	WORD	count;
+#ifdef ENABLE_SEND_TARGET_INFO_EXTENDED
+	DWORD	rarity;
+#endif
 } TPacketGCTargetInfo;
 
 typedef struct packet_target_info_load
