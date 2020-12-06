@@ -60,6 +60,12 @@ namespace quest
 			bool	OnLevelUp(PC& pc);
 			bool	OnLogin(PC& pc, const char * c_pszQuestName = NULL);
 			bool	OnLogout(PC& pc);
+#ifdef ENABLE_QUEST_DUELL_EVENT
+			bool	OnDuellDone(PC& pc);
+			bool	OnDuellWon(PC& pc);
+			bool	OnDuellLost(PC& pc);
+
+#endif
 			bool	OnButton(PC& pc, unsigned int quest_index);
 			bool	OnInfo(PC& pc, unsigned int quest_index);
 			bool	OnAttrIn(PC& pc);

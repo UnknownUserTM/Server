@@ -124,6 +124,11 @@ namespace quest
 #ifdef ENABLE_QUEST_DIE_EVENT
 			void		Die(unsigned int pc, unsigned int npc);
 #endif
+#ifdef ENABLE_QUEST_DUELL_EVENT
+			void		DuellDone(unsigned int pc, unsigned int npc);
+			void		DuellWon(unsigned int pc, unsigned int npc);
+			void		DuellLost(unsigned int pc, unsigned int npc);
+#endif
 			void		LevelUp(unsigned int pc);
 			void		AttrIn(unsigned int pc, LPCHARACTER ch, int attr);
 			void		AttrOut(unsigned int pc, LPCHARACTER ch, int attr);

@@ -646,6 +646,27 @@ namespace quest
 	
 	
 #endif
+	int npc_get_type(lua_State* L)
+	{
+		CQuestManager& q = CQuestManager::instance();
+		LPCHARACTER npc = q.GetCurrentNPCCharacterPtr();
+		if(npc->IsPC())
+		{
+			lua_pushnumber(L, 0);
+		}
+		else if(npc->IsStone())
+		{
+			lua_pushnumber(L, 1);
+		}
+		else if(npc->IsMonster())
+		{
+			lua_pushnumber(L, 2);
+		}
+		return 1;
+	}
+	
+	
+
 	void RegisterNPCFunctionTable()
 	{
 		luaL_reg npc_functions[] =
@@ -674,7 +695,10 @@ namespace quest
 			{ "get_hp",		npc_get_hp	},
 			{ "npc_set_fire_bucket_left",		npc_set_fire_bucket_left	},
 			{ "npc_get_fire_bucket_left",		npc_get_fire_bucket_left	},
+
+			{ "get_type",		npc_get_type	},
 			
+
 
 			{ "send_battlezone_win_info",		npc_send_battlezone_win_info	},
 			{ "send_battlezone_loose_info",		npc_send_battlezone_loose_info	},

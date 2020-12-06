@@ -397,7 +397,29 @@ namespace quest
 	{
 		return HandleReceiveAllEvent(pc, QUEST_LOGOUT_EVENT);
 	}
+	
+	// bool NPC::OnDead(PC& pc)
+	// {
+		// return HandleReceiveAllEvent(pc, QUEST_DEAD_EVENT);
+	// }
 
+#ifdef ENABLE_QUEST_DUELL_EVENT
+	bool NPC::OnDuellDone(PC& pc)
+	{
+		return HandleReceiveAllEvent(pc, QUEST_DUELL_DONE_EVENT);
+	}
+
+	bool NPC::OnDuellWon(PC& pc)
+	{
+		return HandleReceiveAllEvent(pc, QUEST_DUELL_WON_EVENT);
+	}
+	
+	bool NPC::OnDuellLost(PC& pc)
+	{
+		return HandleReceiveAllEvent(pc, QUEST_DUELL_LOST_EVENT);
+	}
+
+#endif	
 	bool NPC::OnUnmount(PC& pc)
 	{
 		return HandleReceiveAllEvent(pc, QUEST_UNMOUNT_EVENT);

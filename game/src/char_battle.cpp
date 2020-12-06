@@ -1283,7 +1283,20 @@ void CHARACTER::Dead(LPCHARACTER pkKiller, bool bImmediateDead)
 			// }				
 		
 		
-		}	
+		}
+		
+#ifdef ENABLE_QUEST_DUELL_EVENT
+		if (isAgreedPVP)
+		{
+			
+			quest::CQuestManager::instance().DuellWon(pkKiller->GetPlayerID(), GetPlayerID());
+			quest::CQuestManager::instance().DuellLost(GetPlayerID(), pkKiller->GetPlayerID());
+			
+			quest::CQuestManager::instance().DuellDone(GetPlayerID(), pkKiller->GetPlayerID());
+			quest::CQuestManager::instance().DuellDone(pkKiller->GetPlayerID(), GetPlayerID());
+			
+		}
+#endif
 		
 		if (IsPC())
 		{

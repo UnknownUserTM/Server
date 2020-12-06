@@ -90,6 +90,15 @@ namespace quest
 #ifdef ENABLE_QUEST_DIE_EVENT
 		m_mapEventName.insert(TEventNameMap::value_type("die", QUEST_DIE_EVENT));
 #endif
+#ifdef ENABLE_QUEST_DUELL_EVENT
+		m_mapEventName.insert(TEventNameMap::value_type("duell_done", QUEST_DUELL_DONE_EVENT));
+		m_mapEventName.insert(TEventNameMap::value_type("duell_won", QUEST_DUELL_WON_EVENT));
+		m_mapEventName.insert(TEventNameMap::value_type("duell_lost", QUEST_DUELL_LOST_EVENT));
+#endif
+
+
+
+
 
 		m_bNoSend = false;
 
@@ -548,6 +557,61 @@ namespace quest
 				return;
 
 			m_mapNPC[QUEST_NO_NPC].OnDie(*pPC);
+
+		}
+		else
+			sys_err("QUEST: no such pc id : %d", pc);
+	}
+#endif
+#ifdef ENABLE_QUEST_DUELL_EVENT
+	void CQuestManager::DuellDone(unsigned int pc, unsigned int npc)
+	{
+		PC * pPC;
+
+		sys_log(0, "CQuestManager::Kill DUELL_DONE_EVENT (pc=%d, npc=%d)", pc, npc);
+
+		if ((pPC = GetPC(pc)))
+		{
+			if (!CheckQuestLoaded(pPC))
+				return;
+
+			m_mapNPC[QUEST_NO_NPC].OnDuellDone(*pPC);
+
+		}
+		else
+			sys_err("QUEST: no such pc id : %d", pc);
+	}
+	
+	void CQuestManager::DuellWon(unsigned int pc, unsigned int npc)
+	{
+		PC * pPC;
+
+		sys_log(0, "CQuestManager::Kill DUELL_WON_EVENT (pc=%d, npc=%d)", pc, npc);
+
+		if ((pPC = GetPC(pc)))
+		{
+			if (!CheckQuestLoaded(pPC))
+				return;
+
+			m_mapNPC[QUEST_NO_NPC].OnDuellWon(*pPC);
+
+		}
+		else
+			sys_err("QUEST: no such pc id : %d", pc);
+	}
+	
+	void CQuestManager::DuellLost(unsigned int pc, unsigned int npc)
+	{
+		PC * pPC;
+
+		sys_log(0, "CQuestManager::Kill DUELL_LOST_EVENT (pc=%d, npc=%d)", pc, npc);
+
+		if ((pPC = GetPC(pc)))
+		{
+			if (!CheckQuestLoaded(pPC))
+				return;
+
+			m_mapNPC[QUEST_NO_NPC].OnDuellLost(*pPC);
 
 		}
 		else
