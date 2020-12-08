@@ -24,6 +24,7 @@ class CDungeon
 
 	// DUNGEON_NOTICE
 	void	Notice(const char* msg);
+	void	Complete();
 	// END_OF_DUNGEON_NOTICE
 
 	void	JoinParty(LPPARTY pParty);

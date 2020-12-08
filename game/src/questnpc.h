@@ -66,6 +66,12 @@ namespace quest
 			bool	OnDuellLost(PC& pc);
 
 #endif
+#ifdef ENABLE_NEW_DUNGEON_STUFF
+			bool	OnDungeonComplete(PC& pc);
+
+#endif
+
+
 			bool	OnButton(PC& pc, unsigned int quest_index);
 			bool	OnInfo(PC& pc, unsigned int quest_index);
 			bool	OnAttrIn(PC& pc);

@@ -129,6 +129,9 @@ namespace quest
 			void		DuellWon(unsigned int pc, unsigned int npc);
 			void		DuellLost(unsigned int pc, unsigned int npc);
 #endif
+#ifdef ENABLE_NEW_DUNGEON_STUFF
+			void		DungeonComplete(unsigned int pc, unsigned int npc);
+#endif
 			void		LevelUp(unsigned int pc);
 			void		AttrIn(unsigned int pc, LPCHARACTER ch, int attr);
 			void		AttrOut(unsigned int pc, LPCHARACTER ch, int attr);

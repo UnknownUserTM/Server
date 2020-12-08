@@ -327,6 +327,7 @@ int CalcAttBonus(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, int iAtk)
 	else if (pkVictim->IsPC())
 	{
 		iAtk += (iAtk * pkAttacker->GetPoint(POINT_ATTBONUS_HUMAN)) / 100;
+		iAtk += (iAtk * pkAttacker->GetPoint(POINT_ATTBONUS_PLAYER)) / 100;
 
 		switch (pkVictim->GetJob())
 		{
@@ -352,9 +353,9 @@ int CalcAttBonus(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, int iAtk)
 #endif
 		}
 	}
-
 	if (pkAttacker->IsPC() == true)
 	{
+		iAtk -= (iAtk * pkVictim->GetPoint(POINT_DEFBONUS_PLAYER)) / 100;
 		switch (pkAttacker->GetJob())
 		{
 			case JOB_WARRIOR:
@@ -385,6 +386,7 @@ int CalcAttBonus(LPCHARACTER pkAttacker, LPCHARACTER pkVictim, int iAtk)
 	//몬스터 속성공격 데미지의 30%에 해당하는 수치에만 저항이 적용됨.
 	if (pkAttacker->IsNPC() && pkVictim->IsPC())
 	{
+		iAtk -= (iAtk * pkVictim->GetPoint(POINT_DEFBONUS_MONSTER)) / 100;
 		if (pkAttacker->IsRaceFlag(RACE_FLAG_ATT_ELEC))
 			iAtk -= (iAtk * 30 * pkVictim->GetPoint(POINT_RESIST_ELEC))		/ 10000;
 		else if (pkAttacker->IsRaceFlag(RACE_FLAG_ATT_FIRE))

@@ -420,6 +420,16 @@ namespace quest
 	}
 
 #endif	
+
+#ifdef ENABLE_NEW_DUNGEON_STUFF
+	bool NPC::OnDungeonComplete(PC& pc)
+	{
+		return HandleReceiveAllEvent(pc, QUEST_DUNGEON_COMPLETE_EVENT);
+	}
+
+
+#endif	
+
 	bool NPC::OnUnmount(PC& pc)
 	{
 		return HandleReceiveAllEvent(pc, QUEST_UNMOUNT_EVENT);
