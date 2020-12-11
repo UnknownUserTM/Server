@@ -95,7 +95,9 @@ namespace quest
 		m_mapEventName.insert(TEventNameMap::value_type("duell_won", QUEST_DUELL_WON_EVENT));
 		m_mapEventName.insert(TEventNameMap::value_type("duell_lost", QUEST_DUELL_LOST_EVENT));
 #endif
-
+#ifdef ENABLE_NEW_DUNGEON_STUFF
+		m_mapEventName.insert(TEventNameMap::value_type("dungeon_complete", QUEST_DUNGEON_COMPLETE_EVENT));
+#endif
 
 
 
@@ -618,7 +620,26 @@ namespace quest
 			sys_err("QUEST: no such pc id : %d", pc);
 	}
 #endif
+#ifdef ENABLE_NEW_DUNGEON_STUFF
+	void CQuestManager::DungeonComplete(unsigned int pc, unsigned int npc)
+	{
+		PC * pPC;
 
+		sys_log(0, "CQuestManager::Kill DUNGEON_COMPLETE_EVENT (pc=%d, npc=%d)", pc, npc);
+
+		if ((pPC = GetPC(pc)))
+		{
+			if (!CheckQuestLoaded(pPC))
+				return;
+
+			m_mapNPC[QUEST_NO_NPC].OnDungeonComplete(*pPC);
+
+		}
+		else
+			sys_err("QUEST: no such pc id : %d", pc);
+	}
+	
+#endif
 	bool CQuestManager::ServerTimer(unsigned int npc, unsigned int arg)
 	{
 		SetServerTimerArg(arg);

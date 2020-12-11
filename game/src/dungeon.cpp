@@ -1171,6 +1171,19 @@ namespace
 
 		const char * m_psz;
 	};
+	// struct FComplete
+	// {
+
+		// void operator() (LPENTITY ent)
+		// {
+			// if (ent->IsType(ENTITY_CHARACTER))
+			// {
+				// LPCHARACTER ch = (LPCHARACTER) ent;
+				// quest::CQuestManager::instance().DungeonComplete(ch->GetPlayerID(), quest::QUEST_NO_NPC);
+			// }
+		// }
+
+	// };
 }
 
 void CDungeon::Notice(const char* msg)
@@ -1185,6 +1198,37 @@ void CDungeon::Notice(const char* msg)
 	}
 
 	FNotice f(msg);
+	pMap->for_each(f);
+}
+
+struct FCompleteDungeon
+{
+	void operator()(LPENTITY ent)
+	{
+		if (ent->IsType(ENTITY_CHARACTER))
+		{
+			LPCHARACTER ch = (LPCHARACTER) ent;
+
+			if (ch->IsPC())
+			{
+				ch->ChatPacket(CHAT_TYPE_NOTICE, "%d", ch->GetPlayerID());
+				quest::CQuestManager::instance().DungeonComplete(ch->GetPlayerID(), quest::QUEST_NO_NPC);
+			}
+		}
+	}
+};
+
+void CDungeon::Complete()
+{
+	LPSECTREE_MAP pMap = SECTREE_MANAGER::instance().GetMap(m_lMapIndex);
+
+	if (!pMap)
+	{
+		sys_err("d.Complete: cannot find map by index %d", m_lMapIndex);
+		return;
+	}
+
+	FCompleteDungeon f;
 	pMap->for_each(f);
 }
 // END_OF_DUNGEON_NOTICE

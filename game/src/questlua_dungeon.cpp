@@ -1803,7 +1803,17 @@ namespace quest
 		
 		return 1;
 	}	
-	
+
+	int dungeon_complete(lua_State * L)
+	{
+		CQuestManager& q = CQuestManager::instance();
+		LPDUNGEON pDungeon = q.GetCurrentDungeon();
+
+		pDungeon->Complete();
+		
+		return 1;
+	}	
+
 	void RegisterDungeonFunctionTable()
 	{
 		luaL_reg dungeon_functions[] =
@@ -1850,7 +1860,8 @@ namespace quest
 			
 			{ "set_scale",		dungeon_set_scale	},
 			{ "get_scale",		dungeon_get_scale	},
-			
+			{ "complete",		dungeon_complete	},
+						
 			
 			// Neue Dungeon Funktionen
 			{ "get_unique_pos_x",			dungeon_get_unique_pos_x	},

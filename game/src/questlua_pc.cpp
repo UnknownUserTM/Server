@@ -4035,6 +4035,63 @@ teleport_area:
 		}
 	}
 	
+	int pc_give_biologist_bonus_reward(lua_State* L)
+	{
+		LPCHARACTER ch = CQuestManager::instance().GetCurrentCharacterPtr();
+		int questIndex = (int) lua_tonumber(L, 1);
+		switch (questIndex)
+		{
+			case 1: // 50 DEF
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_1, POINT_DEF_BONUS, 50, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;
+				
+			case 2: // 5 Monster, 5% Boss
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_2_1, POINT_ATTBONUS_MONSTER, 5, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_2_2, POINT_ATTBONUS_BOSS, 5, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;	
+				
+			case 3: // 50 Angriffswert
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_3, POINT_ATT_BONUS, 50, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;
+				
+			case 4: // 5 Metin
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_4, POINT_ATTBONUS_STONE, 5, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;	
+				
+			case 5: // 10 Krit
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_5, POINT_CRITICAL_PCT, 10, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;	
+				
+			case 6: // 2000 TP
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_6, POINT_ATTBONUS_STONE, 2000, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;
+				
+			case 7: // 5 Monsterwiderstand
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_7, POINT_DEFBONUS_MONSTER, 5, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;
+				
+			case 8: // 10 Monster, 5 Monsterwiderstand
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_8_1, POINT_ATTBONUS_MONSTER, 10, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_8_2, POINT_DEFBONUS_MONSTER, 5, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;				
+				
+			case 9: // 10 Metins, 10 Boss
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_9_1, POINT_ATTBONUS_STONE, 10, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_9_2, POINT_ATTBONUS_BOSS, 10, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;				
+			
+			case 10: // 10 PlayerDEF, 4% Stark gegen Spieler
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_10_1, POINT_DEFBONUS_PLAYER, 10, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_10_2, POINT_ATTBONUS_PLAYER, 4, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;				
+			
+			case 11: // 10 Kritdeff, 10 DB Def
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_10_1, POINT_RESIST_CRITICAL, 10, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_10_2, POINT_RESIST_PENETRATE, 10, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				return 0;				
+			
+		}
+	}
 	
 	void RegisterPCFunctionTable()
 	{
@@ -4263,6 +4320,7 @@ teleport_area:
 			{ "rem_perma_potion_affect",	pc_rem_perma_potion_affect	},		
 			{ "set_normal_potion_affect",	pc_set_normal_potion_affect	},		
 			{ "check_for_conflict_affect",	pc_check_for_conflict_affect	},		
+			{ "give_biologist_bonus_reward",	pc_give_biologist_bonus_reward	},		
 
 			
 			{ "get_killee_drop_pct",	pc_get_killee_drop_pct	}, /* mob_vnum.kill 이벤트에서 killee와 pc와의 level 차이, pc의 프리미엄 드랍률 등등을 고려한 아이템 드랍 확률.
