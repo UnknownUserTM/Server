@@ -834,9 +834,9 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		void			SetRealPoint(BYTE idx, int val);
 		int				GetRealPoint(BYTE idx) const;
 
-		void			SetPoint(BYTE idx, int64_t val);
-		int64_t			GetPoint(BYTE idx) const;
-		int				GetLimitPoint(BYTE idx) const;
+		void			SetPoint(WORD idx, int64_t val);
+		int64_t			GetPoint(WORD idx) const;
+		int				GetLimitPoint(WORD idx) const;
 		int				GetPolymorphPoint(BYTE idx) const;
 
 		const TMobTable &	GetMobTable() const;

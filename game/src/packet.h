@@ -1030,7 +1030,7 @@ typedef struct packet_add_char
 
 	BYTE	bType;
 	WORD	wRaceNum;
-	BYTE	bMovingSpeed;
+	WORD	wMovingSpeed;
 	BYTE	bAttackSpeed;
 
 	BYTE	bStateFlag;
@@ -1059,7 +1059,7 @@ typedef struct packet_char_additional_info
    DWORD	dwVID;
 
    WORD        awPart[CHR_EQUIPPART_NUM];
-   BYTE	bMovingSpeed;
+   WORD	wMovingSpeed;
    BYTE	bAttackSpeed;
 
    BYTE	bStateFlag;
@@ -1078,7 +1078,7 @@ typedef struct packet_update_char
 	DWORD	dwVID;
 
 	WORD        awPart[CHR_EQUIPPART_NUM];
-	BYTE	bMovingSpeed;
+	WORD	wMovingSpeed;
 	BYTE	bAttackSpeed;
 
 	BYTE	bStateFlag;

@@ -954,7 +954,7 @@ void CHARACTER::EncodeInsertPacket(LPENTITY entity)
 	pack.y			= GetY();
 	pack.z			= GetZ();
 	pack.wRaceNum	= static_cast<WORD>(GetRaceNum());
-	pack.bMovingSpeed	= IsPet() ? 150: GetLimitPoint(POINT_MOV_SPEED);
+	pack.wMovingSpeed	= IsPet() ? 150: GetLimitPoint(POINT_MOV_SPEED);
 	pack.bAttackSpeed	= GetLimitPoint(POINT_ATT_SPEED);
 	pack.dwAffectFlag[0] = m_afAffectFlag.bits[0];
 	pack.dwAffectFlag[1] = m_afAffectFlag.bits[1];
@@ -1122,7 +1122,7 @@ void CHARACTER::UpdatePacket()
 	pack.awPart[CHR_EQUIPPART_HEAD] = GetPart(PART_HEAD);
 	pack.awPart[CHR_EQUIPPART_HAIR] = GetPart(PART_HAIR);
 
-	pack.bMovingSpeed	= GetLimitPoint(POINT_MOV_SPEED);
+	pack.wMovingSpeed	= GetLimitPoint(POINT_MOV_SPEED);
 	pack.bAttackSpeed	= GetLimitPoint(POINT_ATT_SPEED);
 	pack.bStateFlag	= m_bAddChrState;
 	pack.dwAffectFlag[0] = m_afAffectFlag.bits[0];
@@ -2407,13 +2407,7 @@ void CHARACTER::ComputePoints()
 			}
 		}
 
-		// 기본 값들
-#ifdef ENABLE_NEWSTUFF
-		SetPoint(POINT_MOV_SPEED, g_iBaseMovementSpeed);
-#else
-		SetPoint(POINT_MOV_SPEED, 100);
-		
-#endif
+		SetPoint(POINT_MOV_SPEED, DEFAULT_MOVE_SPEED);
 		SetPoint(POINT_ATT_SPEED,	100);
 		PointChange(POINT_ATT_SPEED, GetPoint(POINT_PARTY_HASTE_BONUS));
 		SetPoint(POINT_CASTING_SPEED,	100);
@@ -3044,7 +3038,7 @@ int CHARACTER::GetPolymorphPoint(BYTE type) const
 	return GetPoint(type);
 }
 
-int64_t CHARACTER::GetPoint(BYTE type) const
+int64_t CHARACTER::GetPoint(WORD type) const
 {
 	if (type >= POINT_MAX_NUM)
 	{
@@ -3073,7 +3067,7 @@ int64_t CHARACTER::GetPoint(BYTE type) const
 	return (val);
 }
 
-int CHARACTER::GetLimitPoint(BYTE type) const
+int CHARACTER::GetLimitPoint(WORD type) const
 {
 	if (type >= POINT_MAX_NUM)
 	{
@@ -3101,7 +3095,7 @@ int CHARACTER::GetLimitPoint(BYTE type) const
 			min_limit = 0;
 
 			if (IsPC())
-				limit = 200;
+				limit = MOVEMENT_SPEED_LIMIT;
 			else
 				limit = 250;
 			break;
@@ -3131,7 +3125,7 @@ int CHARACTER::GetLimitPoint(BYTE type) const
 	return (val);
 }
 
-void CHARACTER::SetPoint(BYTE type, int64_t val)
+void CHARACTER::SetPoint(WORD type, int64_t val)
 {
 	if (type >= POINT_MAX_NUM)
 	{
