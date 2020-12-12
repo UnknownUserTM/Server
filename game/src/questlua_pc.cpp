@@ -4067,7 +4067,7 @@ teleport_area:
 				return 0;	
 				
 			case 7: // 2000 TP
-				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_7, POINT_ATTBONUS_STONE, 2000, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
+				ch->AddAffect(AFFECT_BIOLOGIST_BONUS_7, POINT_HP, 2000, AFF_NONE, INFINITE_AFFECT_DURATION, 0, true, true);
 				return 0;
 				
 			case 8: // 5 Monsterwiderstand
