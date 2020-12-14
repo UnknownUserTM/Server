@@ -32,3 +32,4 @@
 
 #define DEFAULT_MOVE_SPEED	200 //default 100
 #define MOVEMENT_SPEED_LIMIT	300 //default 200
+#define PUSH_ITEM_SECURITY

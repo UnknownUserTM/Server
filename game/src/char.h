@@ -2028,6 +2028,10 @@ class CHARACTER : public CEntity, public CFSM, public CHorseRider
 		BOOL	IsMonarch() const;
 		// END_MONARCH
 		void Say(const std::string & s);
+		
+#ifdef PUSH_ITEM_SECURITY
+		void	CheckWrongItems();
+#endif
 
 		enum MONARCH_COOLTIME
 		{

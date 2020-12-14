@@ -71,6 +71,9 @@ class LogManager : public singleton<LogManager>
 		void		VCardLog(DWORD vcard_id, DWORD x, DWORD y, const char * hostname, const char * giver_name, const char * giver_ip, const char * taker_name, const char * taker_ip);
 		void		FishLog(DWORD dwPID, int prob_idx, int fish_id, int fish_level, DWORD dwMiliseconds, DWORD dwVnum = false, DWORD dwValue = 0);
 		void		QuestRewardLog(const char * c_pszQuestName, DWORD dwPID, DWORD dwLevel, int iValue1, int iValue2);
+#ifdef PUSH_ITEM_SECURITY
+		void		WrongItemLog(DWORD pid, const char* c_szName, const char* item_name, DWORD item_id, int bType, int value, int maxvalue);
+#endif
 		void		DetailLoginLog(bool isLogin, LPCHARACTER ch);
 		void		DragonSlayLog(DWORD dwGuildID, DWORD dwDragonVnum, DWORD dwStartTime, DWORD dwEndTime);
 		void		HackShieldLog(unsigned long ErrorCode, LPCHARACTER ch);

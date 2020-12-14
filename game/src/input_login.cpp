@@ -651,6 +651,10 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 	ch->ReviveInvisible(5);
 
 	d->SetPhase(PHASE_GAME);
+	
+#ifdef PUSH_ITEM_SECURITY
+	ch->CheckWrongItems();
+#endif
 
 	if(ch->GetItemAward_cmd())																		//게임페이즈 들어가면
 		quest::CQuestManager::instance().ItemInformer(ch->GetPlayerID(),ch->GetItemAward_vnum());	//questmanager 호출
