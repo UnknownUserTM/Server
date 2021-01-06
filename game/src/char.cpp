@@ -1340,7 +1340,7 @@ void CHARACTER::CreatePlayerProto(TPlayerTable & tab)
 	tab.skill_point = GetPoint(POINT_SKILL);
 	tab.sub_skill_point = GetPoint(POINT_SUB_SKILL);
 	tab.horse_skill_point = GetPoint(POINT_HORSE_SKILL);
-
+	tab.mount_level = 0;
 	tab.stat_reset_count = GetPoint(POINT_STAT_RESET_COUNT);
 
 	tab.hp = GetHP();
@@ -1897,11 +1897,13 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 	SetPoint(POINT_SKILL, t->skill_point);
 	SetPoint(POINT_SUB_SKILL, t->sub_skill_point);
 	SetPoint(POINT_HORSE_SKILL, t->horse_skill_point);
-
+	SetPoint(POINT_MOUNT_LEVEL, GetQuestFlag("mount_main.mount_level"));
 	SetPoint(POINT_STAT_RESET_COUNT, t->stat_reset_count);
 
 	SetPoint(POINT_LEVEL_STEP, t->level_step);
 	SetRealPoint(POINT_LEVEL_STEP, t->level_step);
+	
+	//sys_log(0, "mount_level: %s", t->mount_level);
 
 	SetRace(t->job);
 
@@ -1923,16 +1925,15 @@ void CHARACTER::SetPlayerProto(const TPlayerTable * t)
 	{
 		if (GetGMLevel() > GM_LOW_WIZARD)
 		{
-			// if (GetGMLevel() == GM_HIGH_WIZARD)
-			// {
+
 				// //ChatPacket(CHAT_TYPE_INFO, "Gm Rang: Dev");
 				// m_afAffectFlag.Set(AFF_DEV);
 			// }
 			// else
 			// {
 				// //ChatPacket(CHAT_TYPE_INFO, "Gm Rang: Ymir");
-				// m_afAffectFlag.Set(AFF_YMIR);
-			// }
+			m_afAffectFlag.Set(AFF_YMIR);
+			
 			m_bPKMode = PK_MODE_PROTECT;
 		}
 	}
@@ -2380,6 +2381,9 @@ void CHARACTER::ComputePoints()
 
 	SetPoint(POINT_HP_RECOVERY, lHPRecovery);
 	SetPoint(POINT_SP_RECOVERY, lSPRecovery);
+	
+	
+	SetPoint(POINT_MOUNT_LEVEL, GetRealPoint(POINT_MOUNT_LEVEL));
 
 	// PC_BANG_ITEM_ADD
 	SetPoint(POINT_PC_BANG_EXP_BONUS, 0);
@@ -3111,6 +3115,19 @@ int CHARACTER::GetLimitPoint(WORD type) const
 			limit = 20;
 			max_val = 50;
 			break;
+// #ifdef ENABLE_KIMIKO_MOUNT_SYSTEM				
+		// case POINT_MOUNT_LEVEL:
+			// limit = MOUNT_MAX_LEVEL;
+			
+		// case POINT_MOUNT_SKILL_VALUE_0:
+		// case POINT_MOUNT_SKILL_VALUE_1:
+		// case POINT_MOUNT_SKILL_VALUE_2:
+			// limit = MOUNT_SKILL_MAX_LEVEL;
+			
+		// case POINT_MOUNT_EXP_PERC:
+			// limit = 100;
+// #endif
+			
 	}
 
 	if (val > max_val)
@@ -3808,7 +3825,80 @@ void CHARACTER::PointChange(BYTE type, int64_t amount, bool bAmount, bool bBroad
 				BuffOnAttr_ValueChange(type, old_val, val);
 			}
 			break;
+// #ifdef ENABLE_KIMIKO_MOUNT_SYSTEM			
+		// case POINT_MOUNT_LEVEL:
+			// int new_val = GetPoint(type) + amount;
+			// if(new_val > GetLimitPoint(type))
+				// SetPoint(type, GetLimitPoint(type));
+			// else
+				// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_level",val);
+			
+		// case POINT_MOUNT_EXP:
+			// int new_val = GetPoint(type) + amount;
+			// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_exp",val);
 
+		// case POINT_MOUNT_SKIN:
+			// int new_val = GetPoint(type) + amount;
+			// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_skin",val);
+
+		// case POINT_MOUNT_MAX_LIFE:
+			// int new_val = GetPoint(type) + amount;
+			// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_max_life",val);
+
+		// case POINT_MOUNT_LIFE:
+			// int new_val = GetPoint(type) + amount;
+			// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_life",val);
+
+
+			
+		// case POINT_MOUNT_EXP_PERC:
+			// int new_val = GetPoint(type) + amount;
+			// if(new_val > GetLimitPoint(type))
+				// SetPoint(type, GetLimitPoint(type));
+			// else
+				// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_exp_perc",val);		
+		
+		// case POINT_MOUNT_SKILL_VALUE_0:
+			// int new_val = GetPoint(type) + amount;
+			// if(new_val > GetLimitPoint(type))
+				// SetPoint(type, GetLimitPoint(type));
+			// else
+				// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_skill_value_0",val);		
+		
+		// case POINT_MOUNT_SKILL_VALUE_1:
+			// int new_val = GetPoint(type) + amount;
+			// if(new_val > GetLimitPoint(type))
+				// SetPoint(type, GetLimitPoint(type));
+			// else
+				// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_skill_value_1",val);				
+		
+		// case POINT_MOUNT_SKILL_VALUE_2:
+			// int new_val = GetPoint(type) + amount;
+			// if(new_val > GetLimitPoint(type))
+				// SetPoint(type, GetLimitPoint(type));
+			// else
+				// SetPoint(type, new_val);
+			// val = GetPoint(type);		
+			// SetQuestFlag("mount_main.mount_skill_value_2",val);		
+// #endif			
+		
+			
 		default:
 			sys_err("CHARACTER::PointChange: %s: unknown point change type %d", GetName(), type);
 			return;

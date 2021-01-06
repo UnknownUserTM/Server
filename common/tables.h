@@ -462,7 +462,9 @@ typedef struct SPlayerTable
 	short	skill_point;
 	short	sub_skill_point;
 	short	horse_skill_point;
-
+	
+	//DWORD	mount_level;
+	
 	TPlayerSkill skills[SKILL_MAX_NUM];
 
 	TQuickslot  quickslot[QUICKSLOT_MAX_NUM];
@@ -477,7 +479,9 @@ typedef struct SPlayerTable
 	char	szMobile[MOBILE_MAX_LEN + 1];
 
 	short	stat_reset_count;
-
+	
+	BYTE	mount_level;
+	
 	THorseInfo	horse;
 
 	DWORD	logoff_interval;
