@@ -47,6 +47,47 @@ enum
 	COMMANDAFFECT_SLOW,
 };
 
+#ifdef ENABLE_KIMIKO_MOUNT_SYSTEM
+ACMD(do_mount_info)
+{
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "-------------------------------------------------");
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Info: ");
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Level:         (POINT_MOUNT_LEVEL) %d", ch->GetPoint(POINT_MOUNT_LEVEL));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-EXP:           (POINT_MOUNT_EXP) %d", ch->GetPoint(POINT_MOUNT_EXP));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Skin:          (POINT_MOUNT_SKIN) %d", ch->GetPoint(POINT_MOUNT_SKIN));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-EXP-Perc:      (POINT_MOUNT_EXP_PERC) %d", ch->GetPoint(POINT_MOUNT_EXP_PERC));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Max-Life:      (POINT_MOUNT_MAX_LIFE) %d", ch->GetPoint(POINT_MOUNT_MAX_LIFE));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Life:          (POINT_MOUNT_LIFE) %d", ch->GetPoint(POINT_MOUNT_LIFE));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Max-Endurance: (POINT_MOUNT_MAX_ENDURANCE) %d", ch->GetPoint(POINT_MOUNT_MAX_ENDURANCE));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Endurance:     (POINT_MOUNT_ENDURANCE) %d", ch->GetPoint(POINT_MOUNT_ENDURANCE));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Skill Index 0: (POINT_MOUNT_SKILL_INDEX_0) %d", ch->GetPoint(POINT_MOUNT_SKILL_INDEX_0));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Skill Value 0: (POINT_MOUNT_SKILL_VALUE_0) %d", ch->GetPoint(POINT_MOUNT_SKILL_VALUE_0));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Skill Index 1: (POINT_MOUNT_SKILL_INDEX_1) %d", ch->GetPoint(POINT_MOUNT_SKILL_INDEX_1));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Skill Value 1: (POINT_MOUNT_SKILL_VALUE_1) %d", ch->GetPoint(POINT_MOUNT_SKILL_VALUE_1));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Skill Index 2: (POINT_MOUNT_SKILL_INDEX_2) %d", ch->GetPoint(POINT_MOUNT_SKILL_INDEX_2));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "Mount-Skill Value 2: (POINT_MOUNT_SKILL_VALUE_2) %d", ch->GetPoint(POINT_MOUNT_SKILL_VALUE_2));
+	ch->ChatPacket(CHAT_TYPE_DEBUG, "-------------------------------------------------");
+}
+#endif
+
+
+ACMD(do_dance_all_event)
+{
+	int mapIndex = ch->GetMapIndex();
+
+	const DESC_MANAGER::DESC_SET & c_ref_set = DESC_MANAGER::instance().GetClientSet();
+
+	for (itertype(c_ref_set) it = c_ref_set.begin(); it != c_ref_set.end(); ++it)
+	{
+		LPCHARACTER ch = (*it)->GetCharacter();
+		if (!ch)
+			continue;
+		
+		if (ch->GetMapIndex() == mapIndex)
+			ch->ChatPacket(CHAT_TYPE_COMMAND, "dance_all_event");
+	}
+}
+
 ACMD(do_map_event)
 {
 	char arg1[256];
@@ -335,44 +376,44 @@ bool CHARACTER_GoToName(LPCHARACTER ch, BYTE empire, int mapIndex, const char* g
 
 /*
    = {
-   { "A1|영안읍성",		0, 1,  4693, 9642 },
-   { "A3|자양현",		0, 3,  3608, 8776 },
+   { "A1|????",		0, 1,  4693, 9642 },
+   { "A3|???",		0, 3,  3608, 8776 },
 
-   { "B1|조안읍성",		0, 21,  557, 1579 },
-   { "B3|복정현",		0, 23, 1385, 2349 },
+   { "B1|????",		0, 21,  557, 1579 },
+   { "B3|???",		0, 23, 1385, 2349 },
 
-   { "C1|평무읍성",		0, 41, 9696, 2784 },
-   { "C3|박라현",		0, 43, 8731, 2426 },
+   { "C1|????",		0, 41, 9696, 2784 },
+   { "C3|???",		0, 43, 8731, 2426 },
 
 // Snow
-{ "Snow|서한산",		1, 61, 4342, 2906 },
-{ "Snow|서한산",		2, 61, 3752, 1749 },
-{ "Snow|서한산",		3, 61, 4918, 1736 },
+{ "Snow|???",		1, 61, 4342, 2906 },
+{ "Snow|???",		2, 61, 3752, 1749 },
+{ "Snow|???",		3, 61, 4918, 1736 },
 
 // Flame
-{ "Flame|도염화지|화염",	1, 62, 5994, 7563 },
-{ "Flame|도염화지|화염",	2, 62, 5978, 6222 },
-{ "Flame|도염화지|화염",	3, 62, 7307, 6898 },
+{ "Flame|????|??",	1, 62, 5994, 7563 },
+{ "Flame|????|??",	2, 62, 5978, 6222 },
+{ "Flame|????|??",	3, 62, 7307, 6898 },
 
 // Desert
-{ "Desert|영비사막|사막",	1, 63, 2178, 6272 },
-{ "Desert|영비사막|사막",	2, 63, 2219, 5027 },
-{ "Desert|영비사막|사막",	3, 63, 3440, 5025 },
+{ "Desert|????|??",	1, 63, 2178, 6272 },
+{ "Desert|????|??",	2, 63, 2219, 5027 },
+{ "Desert|????|??",	3, 63, 3440, 5025 },
 
 // Threeway
-{ "Three|승룡곡",		1, 64, 4021, 6739 },
-{ "Three|승룡곡",		2, 64, 2704, 7399 },
-{ "Three|승룡곡",		3, 64, 3213, 8080 },
+{ "Three|???",		1, 64, 4021, 6739 },
+{ "Three|???",		2, 64, 2704, 7399 },
+{ "Three|???",		3, 64, 3213, 8080 },
 
-// 밀교사원
-{ "Milgyo|밀교사원",	1, 65, 5536, 1436 },
-{ "Milgyo|밀교사원",	2, 65, 5536, 1436 },
-{ "Milgyo|밀교사원",	3, 65, 5536, 1436 },
+// ????
+{ "Milgyo|????",	1, 65, 5536, 1436 },
+{ "Milgyo|????",	2, 65, 5536, 1436 },
+{ "Milgyo|????",	3, 65, 5536, 1436 },
 
-// 사귀타워입구
-{ "사귀타워입구",		1, 65, 5905, 1108 },
-{ "사귀타워입구",		2, 65, 5905, 1108 },
-{ "사귀타워입구",		3, 65, 5905, 1108 },
+// ??????
+{ "??????",		1, 65, 5905, 1108 },
+{ "??????",		2, 65, 5905, 1108 },
+{ "??????",		3, 65, 5905, 1108 },
 
 { NULL,			0,  0,    0,    0 },
 };
@@ -574,7 +615,7 @@ ACMD(do_item)
 				M2_DESTROY_ITEM(item);
 				if (!ch->DragonSoul_IsQualified())
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, "인벤이 활성화 되지 않음.");
+					ch->ChatPacket(CHAT_TYPE_INFO, "??? ??? ?? ??.");
 				}
 				else
 					ch->ChatPacket(CHAT_TYPE_INFO, "Not enough inventory space.");
@@ -916,7 +957,7 @@ struct FuncPurge
 
 		int iDist = DISTANCE_APPROX(pkChr->GetX() - m_pkGM->GetX(), pkChr->GetY() - m_pkGM->GetY());
 
-		if (!m_bAll && iDist >= 1000)	// 10미터 이상에 있는 것들은 purge 하지 않는다.
+		if (!m_bAll && iDist >= 1000)	// 10?? ??? ?? ??? purge ?? ???.
 			return;
 
 		sys_log(0, "PURGE: %s %d", pkChr->GetName(), iDist);
@@ -1371,7 +1412,7 @@ ACMD(do_monarch_notice)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "군주만이 사용 가능한 기능입니다"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ?? ??? ?????"));
 	}
 }
 
@@ -1848,12 +1889,12 @@ ACMD(do_makeguild)
 
 	if (!check_name(cp.name))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "적합하지 않은 길드 이름 입니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ?? ?? ?? ???."));
 		return;
 	}
 
 	gm.CreateGuild(cp);
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "(%s) 길드가 생성되었습니다. [임시]"), cp.name);
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "(%s) ??? ???????. [??]"), cp.name);
 }
 
 ACMD(do_deleteguild)
@@ -2060,7 +2101,7 @@ LPCHARACTER chHori, chForge, chLib, chTemple, chTraining, chTree, chPortal, chBa
 
 ACMD(do_b1)
 {
-	//호리병 478 579
+	//??? 478 579
 	chHori = CHARACTER_MANAGER::instance().SpawnMobRange(14017, ch->GetMapIndex(), 304222, 742858, 304222, 742858, true, false);
 	chHori->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_BUILDING_CONSTRUCTION_SMALL, 65535, 0, true);
 	chHori->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
@@ -2107,25 +2148,25 @@ ACMD(do_b2)
 
 ACMD(do_b3)
 {
-	// 포지 492 547
+	// ?? 492 547
 	chForge = CHARACTER_MANAGER::instance().SpawnMobRange(14003, ch->GetMapIndex(), 307500, 746300, 307500, 746300, true, false);
 	chForge->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//높은탑 509 589 -> 도서관
+	//??? 509 589 -> ???
 	chLib = CHARACTER_MANAGER::instance().SpawnMobRange(14007, ch->GetMapIndex(), 307900, 744500, 307900, 744500, true, false);
 	chLib->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//욕조 513 606 -> 힘의신전
+	//?? 513 606 -> ????
 	chTemple = CHARACTER_MANAGER::instance().SpawnMobRange(14004, ch->GetMapIndex(), 307700, 741600, 307700, 741600, true, false);
 	chTemple->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//권투장 490 625
+	//??? 490 625
 	chTraining= CHARACTER_MANAGER::instance().SpawnMobRange(14010, ch->GetMapIndex(), 307100, 739500, 307100, 739500, true, false);
 	chTraining->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//나무 466 614
+	//?? 466 614
 	chTree= CHARACTER_MANAGER::instance().SpawnMobRange(14013, ch->GetMapIndex(), 300800, 741600, 300800, 741600, true, false);
 	chTree->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	//포탈 439 615
+	//?? 439 615
 	chPortal= CHARACTER_MANAGER::instance().SpawnMobRange(14001, ch->GetMapIndex(), 300900, 744500, 300900, 744500, true, false);
 	chPortal->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
-	// 구슬 436 600
+	// ?? 436 600
 	chBall = CHARACTER_MANAGER::instance().SpawnMobRange(14012, ch->GetMapIndex(), 302500, 746600, 302500, 746600, true, false);
 	chBall->AddAffect(AFFECT_DUNGEON_UNIQUE, POINT_NONE, 0, AFF_DUNGEON_UNIQUE, 65535, 0, true);
 }
@@ -2369,7 +2410,7 @@ ACMD(do_reload)
 				break;
 				//END_RELOAD_ADMIN
 			case 'c':	// cube
-				// 로컬 프로세스만 갱산한다.
+				// ?? ????? ????.
 				Cube_init ();
 				break;
 		}
@@ -2414,7 +2455,7 @@ ACMD(do_level)
 
 ACMD(do_gwlist)
 {
-	ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "현재 전쟁중인 길드 입니다"));
+	ch->ChatPacket(CHAT_TYPE_NOTICE, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ???? ?? ???"));
 	CGuildManager::instance().ShowGuildWarList(ch);
 }
 
@@ -2472,7 +2513,7 @@ ACMD(do_guild_state)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "%s: 존재하지 않는 길드 입니다."), arg1);
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "%s: ???? ?? ?? ???."), arg1);
 	}
 }
 
@@ -2494,7 +2535,7 @@ struct FuncWeaken
 
 		int iDist = DISTANCE_APPROX(pkChr->GetX() - m_pkGM->GetX(), pkChr->GetY() - m_pkGM->GetY());
 
-		if (!m_bAll && iDist >= 1000)	// 10미터 이상에 있는 것들은 purge 하지 않는다.
+		if (!m_bAll && iDist >= 1000)	// 10?? ??? ?? ??? purge ?? ???.
 			return;
 
 		if (pkChr->IsNPC())
@@ -2776,7 +2817,7 @@ ACMD(do_priv_empire)
 	if (duration < 0)
 		goto USAGE;
 
-	// 시간 단위로 변경
+	// ?? ??? ??
 	duration = duration * (60*60);
 
 	sys_log(0, "_give_empire_privileage(empire=%d, type=%d, value=%d, duration=%d) by command",
@@ -2793,8 +2834,8 @@ USAGE:
 }
 
 /**
- * @version 05/06/08	Bang2ni - 길드 보너스 퀘스트 진행 안되는 문제 수정.(스크립트가 작성안됨.)
- * 			          quest/priv_guild.quest 로 부터 스크립트 읽어오게 수정됨
+ * @version 05/06/08	Bang2ni - ?? ??? ??? ?? ??? ?? ??.(????? ????.)
+ * 			          quest/priv_guild.quest ? ?? ???? ???? ???
  */
 ACMD(do_priv_guild)
 {
@@ -2815,7 +2856,7 @@ ACMD(do_priv_guild)
 		}
 
 		if (!g)
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "그런 이름 또는 번호의 길드가 없습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ?? ??? ??? ????."));
 		else
 		{
 			char buf[1024+1];
@@ -2927,10 +2968,10 @@ ACMD(do_xmas)
 // BLOCK_CHAT
 ACMD(do_block_chat_list)
 {
-	// GM이 아니거나 block_chat_privilege가 없는 사람은 명령어 사용 불가
+	// GM? ???? block_chat_privilege? ?? ??? ??? ?? ??
 	if (!ch || (ch->GetGMLevel() < GM_HIGH_WIZARD && ch->GetQuestFlag("chat_privilege.block") <= 0))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "그런 명령어는 없습니다"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ???? ????"));
 		return;
 	}
 
@@ -2993,10 +3034,10 @@ ACMD(do_vote_block_chat)
 
 ACMD(do_block_chat)
 {
-	// GM이 아니거나 block_chat_privilege가 없는 사람은 명령어 사용 불가
+	// GM? ???? block_chat_privilege? ?? ??? ??? ?? ??
 	if (ch && (ch->GetGMLevel() < GM_HIGH_WIZARD && ch->GetQuestFlag("chat_privilege.block") <= 0))
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "그런 명령어는 없습니다"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ???? ????"));
 		return;
 	}
 
@@ -3018,8 +3059,8 @@ ACMD(do_block_chat)
 	{
 		if (ch)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, "잘못된 형식의 시간입니다. h, m, s를 붙여서 지정해 주십시오.");
-			ch->ChatPacket(CHAT_TYPE_INFO, "예) 10s, 10m, 1m 30s");
+			ch->ChatPacket(CHAT_TYPE_INFO, "??? ??? ?????. h, m, s? ??? ??? ????.");
+			ch->ChatPacket(CHAT_TYPE_INFO, "?) 10s, 10m, 1m 30s");
 		}
 		return;
 	}
@@ -3162,8 +3203,8 @@ ACMD(do_build)
 
 	CLand * pkLand = CManager::instance().FindLand(ch->GetMapIndex(), ch->GetX(), ch->GetY());
 
-	// NOTE: 조건 체크들은 클라이언트와 서버가 함께 하기 때문에 문제가 있을 때는
-	//       메세지를 전송하지 않고 에러를 출력한다.
+	// NOTE: ?? ???? ?????? ??? ?? ?? ??? ??? ?? ??
+	//       ???? ???? ?? ??? ????.
 	if (!pkLand)
 	{
 		sys_err("%s trying to build on not buildable area.", ch->GetName());
@@ -3176,17 +3217,17 @@ ACMD(do_build)
 		return;
 	}
 
-	// 건설 권한 체크
+	// ?? ?? ??
 	if (GMLevel == GM_PLAYER)
 	{
-		// 플레이어가 집을 지을 때는 땅이 내껀지 확인해야 한다.
+		// ????? ?? ?? ?? ?? ??? ???? ??.
 		if ((!ch->GetGuild() || ch->GetGuild()->GetID() != pkLand->GetOwner()))
 		{
 			sys_err("%s trying to build on not owned land.", ch->GetName());
 			return;
 		}
 
-		// 내가 길마인가?
+		// ?? ?????
 		if (ch->GetGuild()->GetMasterPID() != ch->GetPlayerID())
 		{
 			sys_err("%s trying to build while not the guild master.", ch->GetName());
@@ -3217,7 +3258,7 @@ ACMD(do_build)
 				const TObjectProto * t = CManager::instance().GetObjectProto(dwVnum);
 				if (!t)
 				{
-					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "존재하지 않는 건물입니다."));
+					ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ?? ?????."));
 					return;
 				}
 
@@ -3227,21 +3268,21 @@ ACMD(do_build)
 				{
 					if (pkLand->FindObjectByGroup(t->dwGroupVnum))
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "같이 지을 수 없는 종류의 건물이 지어져 있습니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ? ?? ??? ??? ??? ????."));
 						return;
 					}
 				}
 
-				// 건물 종속성 체크 (이 건물이 지어져 있어야함)
+				// ?? ??? ?? (? ??? ??? ????)
 				if (t->dwDependOnGroupVnum)
 				{
 					//		const TObjectProto * dependent = CManager::instance().GetObjectProto(dwVnum);
 					//		if (dependent)
 					{
-						// 지어져있는가?
+						// ???????
 						if (!pkLand->FindObjectByGroup(t->dwDependOnGroupVnum))
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "건설에 필요한 건물이 지어져 있지 않습니다."));
+							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "??? ??? ??? ??? ?? ????."));
 							return;
 						}
 					}
@@ -3249,21 +3290,21 @@ ACMD(do_build)
 
 				if (test_server || GMLevel == GM_PLAYER)
 				{
-					// GM이 아닐경우만 (테섭에서는 GM도 소모)
-					// 건설 비용 체크
+					// GM? ????? (????? GM? ??)
+					// ?? ?? ??
 					if (t->dwPrice > BUILDING_MAX_PRICE)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "건물 비용 정보 이상으로 건설 작업에 실패했습니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ?? ???? ?? ??? ??????."));
 						return;
 					}
 
 					if (ch->GetGold() < (int)t->dwPrice)
 					{
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "건설 비용이 부족합니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ??? ?????."));
 						return;
 					}
 
-					// 아이템 자재 개수 체크
+					// ??? ?? ?? ??
 
 					int i;
 					for (i = 0; i < OBJECT_MATERIAL_MAX_NUM; ++i)
@@ -3276,7 +3317,7 @@ ACMD(do_build)
 
 						if ((int) dwItemCount > ch->CountSpecifyItem(dwItemVnum))
 						{
-							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "자재가 부족하여 건설할 수 없습니다."));
+							ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "??? ???? ??? ? ????."));
 							return;
 						}
 					}
@@ -3285,11 +3326,11 @@ ACMD(do_build)
 				float x_rot = atof(arg4);
 				float y_rot = atof(arg5);
 				float z_rot = atof(arg6);
-				// 20050811.myevan.건물 회전 기능 봉인 해제
+				// 20050811.myevan.?? ?? ?? ?? ??
 				/*
 				   if (x_rot != 0.0f || y_rot != 0.0f || z_rot != 0.0f)
 				   {
-				   ch->ChatPacket(CHAT_TYPE_INFO, "건물 회전 기능은 아직 제공되지 않습니다");
+				   ch->ChatPacket(CHAT_TYPE_INFO, "?? ?? ??? ?? ???? ????");
 				   return;
 				   }
 				 */
@@ -3310,17 +3351,17 @@ ACMD(do_build)
 				if (!isSuccess)
 				{
 					if (test_server)
-						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "건물을 지을 수 없는 위치입니다."));
+						ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "??? ?? ? ?? ?????."));
 					return;
 				}
 
 				if (test_server || GMLevel == GM_PLAYER)
-					// 건설 재료 소모하기 (테섭에서는 GM도 소모)
+					// ?? ?? ???? (????? GM? ??)
 				{
-					// 건설 비용 소모
+					// ?? ?? ??
 					ch->PointChange(POINT_GOLD, -static_cast<int64_t>(t->dwPrice));
 
-					// 아이템 자재 사용하기
+					// ??? ?? ????
 					{
 						int i;
 						for (i = 0; i < OBJECT_MATERIAL_MAX_NUM; ++i)
@@ -3399,8 +3440,8 @@ ACMD(do_build)
 			break;
 
 		case 'W' :
-			// 담장 세우기
-			// build (w)all 담장번호 담장크기 대문동 대문서 대문남 대문북
+			// ?? ???
+			// build (w)all ???? ???? ??? ??? ??? ???
 
 			if (GMLevel >  GM_PLAYER)
 			{
@@ -3434,8 +3475,8 @@ ACMD(do_build)
 			break;
 
 		case 'E' :
-			// 담장 지우기
-			// build (e)rase 담장셋ID
+			// ?? ???
+			// build (e)rase ???ID
 			if (GMLevel > GM_PLAYER)
 			{
 				one_argument(line, arg1, sizeof(arg1));
@@ -3492,7 +3533,7 @@ ACMD(do_horse_level)
 
 	if (NULL == victim)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "존재하지 않는 캐릭터 입니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ?? ??? ???."));
 		return;
 	}
 
@@ -3692,17 +3733,17 @@ ACMD(do_end_duel)
 	LPCHARACTER pChar = CHARACTER_MANAGER::instance().FindPC(szName);
 	if (pChar == NULL)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "존재하지 않는 캐릭터 입니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ?? ??? ???."));
 		return;
 	}
 
 	if (CArenaManager::instance().EndDuel(pChar->GetPlayerID()) == false)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "대련 강제 종료 실패"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ?? ??"));
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "대련 강제 종료 성공"));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ?? ??"));
 	}
 }
 
@@ -3749,7 +3790,7 @@ ACMD(do_duel)
 			}
 			else
 			{
-				pChar1->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(pChar1->GetLanguage(), "<파티> 파티에서 나가셨습니다."));
+				pChar1->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(pChar1->GetLanguage(), "<??> ???? ??????."));
 				pParty->Quit(pChar1->GetPlayerID());
 			}
 		}
@@ -3763,23 +3804,23 @@ ACMD(do_duel)
 			}
 			else
 			{
-				pChar2->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(pChar2->GetLanguage(), "<파티> 파티에서 나가셨습니다."));
+				pChar2->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(pChar2->GetLanguage(), "<??> ???? ??????."));
 				pParty->Quit(pChar2->GetPlayerID());
 			}
 		}
 
 		if (CArenaManager::instance().StartDuel(pChar1, pChar2, set, minute) == true)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "대련이 성공적으로 시작 되었습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "??? ????? ?? ?????."));
 		}
 		else
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "대련 시작에 문제가 있습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ??? ??? ????."));
 		}
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "대련자가 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ????."));
 	}
 }
 
@@ -3795,7 +3836,7 @@ ACMD(do_stat_plus_amount)
 
 	if (ch->IsPolymorphed())
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "둔갑 중에는 능력을 올릴 수 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ??? ??? ?? ? ????."));
 		return;
 	}
 
@@ -3803,7 +3844,7 @@ ACMD(do_stat_plus_amount)
 
 	if (nRemainPoint <= 0)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "남은 스탯 포인트가 없습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ???? ????."));
 		return;
 	}
 
@@ -3812,41 +3853,41 @@ ACMD(do_stat_plus_amount)
 
 	if (nRemainPoint < nPoint)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "남은 스탯 포인트가 적습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ???? ????."));
 		return;
 	}
 
 	if (nPoint < 0)
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "값을 잘못 입력하였습니다."));
+		ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ???????."));
 		return;
 	}
 
 #ifndef ENABLE_STATPLUS_NOLIMIT
 	switch (subcmd)
 	{
-		case POINT_HT : // 체력
+		case POINT_HT : // ??
 			if (nPoint + ch->GetPoint(POINT_HT) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_HT);
 			}
 			break;
 
-		case POINT_IQ : // 지능
+		case POINT_IQ : // ??
 			if (nPoint + ch->GetPoint(POINT_IQ) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_IQ);
 			}
 			break;
 
-		case POINT_ST : // 근력
+		case POINT_ST : // ??
 			if (nPoint + ch->GetPoint(POINT_ST) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_ST);
 			}
 			break;
 
-		case POINT_DX : // 민첩
+		case POINT_DX : // ??
 			if (nPoint + ch->GetPoint(POINT_DX) > 90)
 			{
 				nPoint = 90 - ch->GetPoint(POINT_DX);
@@ -3854,7 +3895,7 @@ ACMD(do_stat_plus_amount)
 			break;
 
 		default :
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "명령어의 서브 커맨드가 잘못 되었습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ?? ???? ?? ?????."));
 			return;
 			break;
 	}
@@ -3888,7 +3929,7 @@ ACMD(do_break_marriage)
 	str_to_number(pids.pid1, arg1);
 	str_to_number(pids.pid2, arg2);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "플레이어 %d 와 플레이어  %d를 파혼시킵니다.."), pids.pid1, pids.pid2);
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? %d ? ????  %d? ??????.."), pids.pid1, pids.pid2);
 	db_clientdesc->DBPacket(HEADER_GD_BREAK_MARRIAGE, 0, &pids, sizeof(pids));
 }
 
@@ -3922,8 +3963,8 @@ struct FCountInMap
 
 ACMD(do_threeway_war_info)
 {
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "각제국 진행 정보"));
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "선택 맵 정보 성지 %d 통로 %d %d %d"), GetSungziMapIndex(), GetPassMapIndex(1), GetPassMapIndex(2), GetPassMapIndex(3));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "??? ?? ??"));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ? ?? ?? %d ?? %d %d %d"), GetSungziMapIndex(), GetPassMapIndex(1), GetPassMapIndex(2), GetPassMapIndex(3));
 	ch->ChatPacket(CHAT_TYPE_INFO, "ThreewayPhase %d", CThreeWayWar::instance().GetRegenFlag());
 
 	for (int n = 1; n < 4; ++n)
@@ -3946,7 +3987,7 @@ ACMD(do_threeway_war_info)
 
 ACMD(do_threeway_war_myinfo)
 {
-	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "나의 삼거리 진행정보"));
+	ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ??? ????"));
 	ch->ChatPacket(CHAT_TYPE_INFO, "Deadcount %d",
 			CThreeWayWar::instance().GetReviveTokenForPlayer(ch->GetPlayerID()));
 }
@@ -4028,7 +4069,7 @@ ACMD(do_check_monarch_money)
 	str_to_number(empire, arg1);
 	int NationMoney = CMonarch::instance().GetMoney(empire);
 
-	ch->ChatPacket(CHAT_TYPE_INFO, "국고: %d 원", NationMoney);
+	ch->ChatPacket(CHAT_TYPE_INFO, "??: %d ?", NationMoney);
 }
 
 ACMD(do_reset_subskill)
@@ -4307,13 +4348,13 @@ ACMD(do_set_stat)
 	{
 		if (tch->IsPolymorphed())
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "둔갑 중에는 능력을 올릴 수 없습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ??? ??? ?? ? ????."));
 			return;
 		}
 
 		if (subcmd != POINT_HT && subcmd != POINT_IQ && subcmd != POINT_ST && subcmd != POINT_DX)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "명령어의 서브 커맨드가 잘못 되었습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "???? ?? ???? ?? ?????."));
 			return;
 		}
 		int nRemainPoint = tch->GetPoint(POINT_STAT);
@@ -4367,7 +4408,7 @@ ACMD(do_set_stat)
 
 		if (nRemainPoint < nChangeAmount)
 		{
-			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "남은 스탯 포인트가 적습니다."));
+			ch->ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(ch->GetLanguage(), "?? ?? ???? ????."));
 			return;
 		}
 
@@ -4639,8 +4680,8 @@ ACMD (do_attr_full_set)
 	case JOB_WOLFMAN:
 #endif
 		{
-			// 무사 몸빵 셋팅.
-			// 이것만 나와 있어서 임시로 모든 직군 다 이런 속성 따름.
+			// ?? ?? ??.
+			// ??? ?? ??? ??? ?? ?? ? ?? ?? ??.
 			item = ch->GetWear(WEAR_HEAD);
 			if (item != NULL)
 			{
@@ -4747,7 +4788,7 @@ ACMD (do_use_item)
 	}
 	else
 	{
-		ch->ChatPacket(CHAT_TYPE_INFO, "아이템이 없어서 착용할 수 없어.");
+		ch->ChatPacket(CHAT_TYPE_INFO, "???? ??? ??? ? ??.");
 	}
 }
 

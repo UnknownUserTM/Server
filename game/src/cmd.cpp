@@ -5,6 +5,8 @@
 #include "locale_service.h"
 #include "log.h"
 #include "desc.h"
+ACMD(do_dance_all_event);
+ACMD(do_mount_info);
 ACMD(do_stat_val);
 ACMD(do_remove_buff);
 ACMD(do_map_event);
@@ -111,6 +113,7 @@ ACMD(do_advance);
 ACMD(do_stat);
 ACMD(do_respawn);
 ACMD(do_skillup);
+ACMD(do_skillupm);
 ACMD(do_guildskillup);
 ACMD(do_pvp);
 ACMD(do_point_reset);
@@ -418,6 +421,7 @@ struct command_info cmd_info[] =
 	{ "logou",		do_inputall,		0,			POS_DEAD,	GM_PLAYER	},
 	{ "logout",		do_cmd,			SCMD_LOGOUT,		POS_DEAD,	GM_PLAYER	},
 	{ "skillup",	do_skillup,		0,			POS_DEAD,	GM_PLAYER	},
+	{ "skillupm",	do_skillupm,		0,			POS_DEAD,	GM_PLAYER	},
 	{ "gskillup",	do_guildskillup,	0,			POS_DEAD,	GM_PLAYER	},
 	{ "pvp",		do_pvp,			0,			POS_DEAD,	GM_PLAYER	},
 	{ "safebox",	do_safebox_size,	0,			POS_DEAD,	GM_HIGH_WIZARD	},
@@ -583,6 +587,14 @@ struct command_info cmd_info[] =
 
 	{ "remove_buff",	do_remove_buff,		0,		POS_DEAD,	GM_PLAYER	},
 	{ "stat_val",		do_stat_val,		0,		POS_DEAD,	GM_PLAYER	},
+	
+#ifdef ENABLE_KIMIKO_MOUNT_SYSTEM
+	{ "mount_info",		do_mount_info,		0,		POS_DEAD,	GM_IMPLEMENTOR	},
+	
+#endif	
+	
+	{ "dance_all",		do_dance_all_event,		0,		POS_DEAD,	GM_IMPLEMENTOR	},
+	
 	
 	//{ "user_set_pet_name",	do_set_pet_name,		0,		POS_DEAD,	GM_PLAYER	},
 	
