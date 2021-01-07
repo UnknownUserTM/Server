@@ -295,25 +295,23 @@ bool CHARACTER::LearnGrandMasterSkill(DWORD dwSkillVnum)
 
 	sys_log(0, "learn grand master skill[%d] cur %d, next %d", dwSkillVnum, get_global_time(), GetSkillNextReadTime(dwSkillVnum));
 
-	/*
-	   if (get_global_time() < GetSkillNextReadTime(dwSkillVnum))
-	   {
+	
+	if (get_global_time() < GetSkillNextReadTime(dwSkillVnum))
+	{
 	   if (!(test_server && quest::CQuestManager::instance().GetEventFlag("no_read_delay")))
 	   {
-	   if (FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
-	   {
-	// 주안술서 사용중에는 시간 제한 무시
-	RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
-	ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "주안술서를 통해 주화입마에서 빠져나왔습니다."));
+			if (FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
+			{
+				RemoveAffect(AFFECT_SKILL_NO_BOOK_DELAY);
+				ChatPacket(CHAT_TYPE_INFO, LC_TEXT_CONVERT_LANGUAGE(GetLanguage(), "주안술서를 통해 주화입마에서 빠져나왔습니다."));
+			}
+			else
+			{
+				SkillLearnWaitMoreTimeMessage(GetSkillNextReadTime(dwSkillVnum) - get_global_time());
+				return false;
+			}
+		}
 	}
-	else
-	{
-	SkillLearnWaitMoreTimeMessage(GetSkillNextReadTime(dwSkillVnum) - get_global_time());
-	return false;
-	}
-	}
-	}
-	 */
 
 	// bType이 0이면 처음부터 책으로 수련 가능
 	if (pkSk->dwType == 0)

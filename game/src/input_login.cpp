@@ -712,11 +712,11 @@ void CInputLogin::Entergame(LPDESC d, const char * data)
 		sys_log(0, "PREMIUM: %s type %d %dmin", ch->GetName(), i, remain);
 	}
 	
-	if (!ch->FindAffect(AFFECT_SKILL_BOOK_BONUS))
-		ch->AddAffect(AFFECT_SKILL_BOOK_BONUS, POINT_NONE, 0, 0, 536870911, 0, true);
+	// if (!ch->FindAffect(AFFECT_SKILL_BOOK_BONUS))
+		// ch->AddAffect(AFFECT_SKILL_BOOK_BONUS, POINT_NONE, 0, 0, 536870911, 0, true);
 		
-	if (!ch->FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
-		ch->AddAffect(AFFECT_SKILL_NO_BOOK_DELAY, POINT_NONE, 0, 0, 536870911, 0, true);
+	// if (!ch->FindAffect(AFFECT_SKILL_NO_BOOK_DELAY))
+		// ch->AddAffect(AFFECT_SKILL_NO_BOOK_DELAY, POINT_NONE, 0, 0, 536870911, 0, true);
 	
 	ch->ChatPacket(CHAT_TYPE_COMMAND,"statistic %d#%d",4,ch->GetRealPoint(POINT_PLAYTIME)); // PlayTime 4
 	
